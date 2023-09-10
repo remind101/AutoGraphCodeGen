@@ -39,7 +39,7 @@ extension Deprecatable {
 }
 
 extension AllTypes {
-    public func generateImports(configuration: Configuration.SchemaConfiguration) -> (fileName: String, fileText: String) {
+    public func generateFileNameAndImports(configuration: Configuration.SchemaConfiguration) -> (fileName: String, fileText: String) {
         let fileName = configuration.outputSchemaName + ".swift"
         let imports =
             """
@@ -57,45 +57,48 @@ extension AllTypes {
         return (fileName, fileText)
     }
     
-    public func genFragmentsAndOperationsStructs(indentation: String) throws -> String {
+    public func generateFragmentsStructs(indentation: String) throws -> String? {
+        guard self.fragmentIRs.count > 0 else {
+            return nil
+        }
         let orderedFragmentDefinitions = self.fragmentIRs.sorted { left, right in  left.key.value < right.key.value }
         let fragmentDefinitionsCode = try orderedFragmentDefinitions.map {
             try $0.value.generateCode(outputSchemaName: self.outputSchemaName, indentation: indentation)
         }
-        .joined(separator: "\n")
-        
+        .joined(separator: "\n\n")
+        return fragmentDefinitionsCode
+    }
+    
+    public func generateOperationsStructs(indentation: String) throws -> String {
         let orderedOperationDefinitions = self.operationIRs
             .sorted { left, right in left.key.value < right.key.value }
             .map { _, operation in operation }
         let operationDefinitionsCode = try orderedOperationDefinitions.map {
-            try $0.generateCode(outputSchemaName: self.outputSchemaName, indentation: indentation)
+            try $0.generateCode(outputSchemaName: self.outputSchemaName, indentation: "")
         }
-        .joined(separator: "\n")
-        
-        return """
-        public struct \(self.outputSchemaName) {
-        \(fragmentDefinitionsCode)
-        
-        \(operationDefinitionsCode)
-        }
-        """
+        .joined(separator: "\n\n")
+        return operationDefinitionsCode
     }
     
-    public func genEnumDeclarations() -> String {
+    public func generateEnumDeclarations(indentation: String) -> String? {
+        guard self.usedEnumTypes.count > 0 else {
+            return nil
+        }
         let orderedEnums = self.usedEnumTypes
             .sorted { left, right in left.key.value < right.key.value }
             .map { _, `enum` in `enum` }
-        let enumCode = orderedEnums.map { $0.genEnumDeclaration() }.joined(separator: "\n\n")
-        
+        let enumCode = orderedEnums.map { $0.generateEnumDeclaration(indentation: indentation) }.joined(separator: "\n\n")
         return enumCode
     }
     
-    public func genInputObjectStructDeclarations() -> String {
+    public func generateInputObjectStructDeclarations(indentation: String) -> String? {
+        guard self.usedInputObjectTypes.count > 0 else {
+            return nil
+        }
         let orderedInputObjects = self.usedInputObjectTypes
             .sorted { left, right in left.key.value < right.key.value }
             .map { _, inputObject in inputObject }
-        let inputObjectCode = orderedInputObjects.map { $0.generateCode() }.joined(separator: "\n\n")
-        
+        let inputObjectCode = orderedInputObjects.map { $0.generateCode(indentation: indentation) }.joined(separator: "\n\n")
         return inputObjectCode
     }
 }

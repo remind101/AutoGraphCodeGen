@@ -4,7 +4,7 @@ import SwiftSyntax
 
 public func getConfiguration(_ path: String? = nil) throws -> Configuration {
     // Not sure why it's requiring this availability considering we're
-    // forcing a higher version of MacOS.
+    // forcing a higher version of MacOS in our Package.
     guard #available(macOS 13.0, *) else {
         throw AutoGraphCodeGenError.configuration(message: "Must be on MacOS 13 or higher.")
     }
@@ -34,6 +34,9 @@ public func codeGen(configuration: Configuration) throws {
     // or the other otherwise they'll delete eachother on cleanup. "Shared" is just a bit
     // of a hack to reduce that chance. Probably should rename `outputProductsPath` to
     // `sharedOutputProductsPath` while we're at it.
+    
+    // TODO: When swift 5.9 releases, add configuration to allow namespacing shared stuff
+    // under the schema namespace if desired. Requires `https://github.com/apple/swift-evolution/blob/main/proposals/0404-nested-protocols.md`
     let sharedOutputProductsPath = configuration.outputProductsPath + "/Shared"
     func writeProtocolDeclarations() throws {
         let fileName = "GraphQLSchemaRequest.swift"
@@ -100,7 +103,7 @@ public func codeGenSchema(configuration: Configuration.SchemaConfiguration) thro
     }
     
     func writeClientSchema(allTypes: AllTypes) throws {
-        let file = allTypes.generateImports(configuration: configuration)
+        let file = allTypes.generateFileNameAndImports(configuration: configuration)
         let path = requestsOutputPath + "/" + file.fileName
         
         print("writing graphql schema to \(path)")
@@ -114,20 +117,51 @@ public func codeGenSchema(configuration: Configuration.SchemaConfiguration) thro
         }
         fileHandle.seekToEndOfFile()
         
+        // NOTE: Operations are not namespaced because the client controls their naming directly.
+        // However, fragments are namespaced because it's typical to name a fragment as
+        // `TypeFragment`, which has a higher chance of collision across schemas.
+        // Everything else is namespaced because it's not within the client's control.
+        let schemaNamespaceText = """
+        public enum \(allTypes.outputSchemaName) {
+        
+        """
+        let schemaNamespaceTextData = schemaNamespaceText.data(using: String.Encoding.utf8)!
+        fileHandle.write(schemaNamespaceTextData)
+        
+        var needsNewlines = false
         print("writing graphql enums data structures to \(path)")
-        let enumText = allTypes.genEnumDeclarations()
-        let enumTextData = (enumText + "\n\n").data(using: String.Encoding.utf8)!
-        fileHandle.write(enumTextData)
+        if let enumText = allTypes.generateEnumDeclarations(indentation: "    ") {
+            let enumTextData = enumText.data(using: String.Encoding.utf8)!
+            fileHandle.write(enumTextData)
+            needsNewlines = true
+        }
         
         print("writing graphql input object data structures to \(path)")
-        let inputObjectText = allTypes.genInputObjectStructDeclarations()
-        let inputObjectTextData = (inputObjectText + "\n\n").data(using: String.Encoding.utf8)!
-        fileHandle.write(inputObjectTextData)
+        if let inputObjectText = allTypes.generateInputObjectStructDeclarations(indentation: "    ") {
+            if needsNewlines {
+                fileHandle.write("\n\n".data(using: String.Encoding.utf8)!)
+            }
+            let inputObjectTextData = inputObjectText.data(using: String.Encoding.utf8)!
+            fileHandle.write(inputObjectTextData)
+        }
         
-        print("writing graphql documents (fragments and operations) to \(path)")
-        let fragmentsAndOperationsText = try allTypes.genFragmentsAndOperationsStructs(indentation: "    ")
-        let fragmentsAndOperationsTextData = (fragmentsAndOperationsText + "\n").data(using: String.Encoding.utf8)!
-        fileHandle.write(fragmentsAndOperationsTextData)
+        print("writing graphql fragments to \(path)")
+        if let fragmentsStructsText = try allTypes.generateFragmentsStructs(indentation: "    ") {
+            if needsNewlines {
+                fileHandle.write("\n\n".data(using: String.Encoding.utf8)!)
+            }
+            let fragmentsTextData = fragmentsStructsText.data(using: String.Encoding.utf8)!
+            fileHandle.write(fragmentsTextData)
+        }
+        
+        let schemaNamespaceCloseText = "\n}\n\n"
+        let schemaNamespaceCloseTextData = schemaNamespaceCloseText.data(using: String.Encoding.utf8)!
+        fileHandle.write(schemaNamespaceCloseTextData)
+        
+        print("writing graphql operations to \(path)")
+        let operationsStructsText = try allTypes.generateOperationsStructs(indentation: "")
+        let operationsTextData = (operationsStructsText + "\n").data(using: String.Encoding.utf8)!
+        fileHandle.write(operationsTextData)
     }
     
     func writeCustomScalarExtensionFiles(allTypes: AllTypes) throws {

@@ -19,7 +19,7 @@ protocol VariableDeclarationGeneratable {
     /// Returns `ReWrappedSwiftType` to force some underlying choice about
     /// how to translate the GQL type to an acceptable Swift type.
     /// E.g. with `let x: Int` then "Int" is the `SimpleTypeIdentifier`.
-    func swiftVariableTypeIdentifier() throws -> ReWrappedSwiftType
+    func swiftVariableTypeIdentifier(schemaName: String) throws -> ReWrappedSwiftType
 }
 
 /// Capable of producing the components of  a `StructDecl` in the Swift AST and
@@ -36,9 +36,9 @@ protocol NestedStructDeclarationGeneratable: VariableDeclarationGeneratable {
 }
 
 extension NestedStructDeclarationGeneratable {
-    func nestedStructDeclaration(indentation: String) throws -> (propertyVariableDeclaration: String, structDeclarations: String) {
-        let propertyVariableDeclaration = try self.genVariableDeclaration(indentation: indentation)
-        let structDeclaration = try self.selectionSet.genStructDeclaration(parentField: self, indentation: indentation)
+    func nestedStructDeclaration(indentation: String, schemaName: String) throws -> (propertyVariableDeclaration: String, structDeclarations: String) {
+        let propertyVariableDeclaration = try self.genVariableDeclaration(indentation: indentation, schemaName: schemaName)
+        let structDeclaration = try self.selectionSet.genStructDeclaration(parentField: self, indentation: indentation, schemaName: schemaName)
         return (propertyVariableDeclaration, structDeclaration)
     }
 }
@@ -52,42 +52,42 @@ extension FragmentSpread: VariableDeclarationGeneratable {
         self.name.value.lowercaseFirst
     }
     
-    func swiftVariableTypeIdentifier() -> ReWrappedSwiftType {
-        .val(self.name.value)
+    func swiftVariableTypeIdentifier(schemaName: String) -> ReWrappedSwiftType {
+        self.swiftStructDeclarationTypeIdentifier().withPrefixedBase("\(schemaName).")
     }
     
     func swiftStructDeclarationTypeIdentifier() -> ReWrappedSwiftType {
-        self.swiftVariableTypeIdentifier()
+        .val(self.name.value)
     }
 }
 
 extension SelectionSetIR {
-    public func genInitializerDeclarationParameterList(parentFieldBaseTypeName: String?, omit__typename: Bool = false) throws -> String {
+    public func genInitializerDeclarationParameterList(schemaName: String, parentFieldBaseTypeName: String?, omit__typename: Bool = false) throws -> String {
         // MARK: - __typename-injection:
         let orderedScalarFields = self.scalarFields.ordered(omitting__typename: omit__typename)
         let scalarParameters = orderedScalarFields.map {
-            genFunctionParameter(name: $0.swiftVariableIdentifierName, type: $0.swiftVariableTypeIdentifier())
+            genFunctionParameter(name: $0.swiftVariableIdentifierName, type: $0.swiftVariableTypeIdentifier(schemaName: schemaName))
         }
                 
         let orderedObjectFields = self.objectFields.ordered()
         let nestedObjectStructParameters = try orderedObjectFields.map { objectField in
             let type = try {
                 if let parentFieldBaseTypeName = parentFieldBaseTypeName {
-                    return try objectField.swiftVariableTypeIdentifier().withPrefixedBase("\(parentFieldBaseTypeName).")
+                    return try objectField.swiftVariableTypeIdentifier(schemaName: schemaName).withPrefixedBase("\(parentFieldBaseTypeName).")
                 }
-                return try objectField.swiftVariableTypeIdentifier()
+                return try objectField.swiftVariableTypeIdentifier(schemaName: schemaName)
             }()
             return genFunctionParameter(name: objectField.swiftVariableIdentifierName, type: type)
         }
         
         let orderedFragmentSpreads = self.fragmentSpreads.ordered()
         let fragmentParameters = orderedFragmentSpreads.map {
-            genFunctionParameter(name: $0.swiftVariableIdentifierName, type: $0.swiftVariableTypeIdentifier())
+            genFunctionParameter(name: $0.swiftVariableIdentifierName, type: $0.swiftVariableTypeIdentifier(schemaName: schemaName))
         }
         
         let orderedInlineFragments = self.inlineFragments.ordered()
         let inlineFragmentParameters = orderedInlineFragments.map {
-            genFunctionParameter(name: $0.swiftVariableIdentifierName, type: $0.swiftVariableTypeIdentifier())
+            genFunctionParameter(name: $0.swiftVariableIdentifierName, type: $0.swiftVariableTypeIdentifier(schemaName: schemaName))
         }
         
         let everything = scalarParameters + nestedObjectStructParameters + fragmentParameters + inlineFragmentParameters
@@ -119,7 +119,7 @@ extension SelectionSetIR {
         return everything.joined(separator: "\n")
     }
     
-    public func decodableCodeBlockAssignmentExpressions(indentation: String, parentFieldBaseTypeName: String?) throws -> String {
+    public func decodableCodeBlockAssignmentExpressions(indentation: String, schemaName: String, parentFieldBaseTypeName: String?) throws -> String {
         let orderedScalarFields = self.scalarFields.ordered(omitting__typename: false)
         var scalarAssignments: [String] = orderedScalarFields.map { field in
             
@@ -130,7 +130,7 @@ extension SelectionSetIR {
                 return "\(indentation)self.__typename = typename"
             }
             
-            let typeName: String = field.swiftVariableTypeIdentifier().genSwiftType();
+            let typeName: String = field.swiftVariableTypeIdentifier(schemaName: schemaName).genSwiftType();
             return "\(indentation)self.\(field.swiftVariableIdentifierName) = try values.decode(\(typeName).self, forKey: .\(field.swiftVariableIdentifierName))"
         }
         scalarAssignments.insert("\(indentation)let typename = try values.decode(String.self, forKey: .__typename)", at: 0)
@@ -139,16 +139,16 @@ extension SelectionSetIR {
         let objectStructAssignments = try orderedObjectFields.map { objectField in
             let type = try {
                 if let parentFieldBaseTypeName = parentFieldBaseTypeName {
-                    return try objectField.swiftVariableTypeIdentifier().withPrefixedBase("\(parentFieldBaseTypeName).")
+                    return try objectField.swiftVariableTypeIdentifier(schemaName: schemaName).withPrefixedBase("\(parentFieldBaseTypeName).")
                 }
-                return try objectField.swiftVariableTypeIdentifier()
+                return try objectField.swiftVariableTypeIdentifier(schemaName: schemaName)
             }()
             return "\(indentation)self.\(objectField.swiftVariableIdentifierName) = try values.decode(\(type.genSwiftType()).self, forKey: .\(objectField.swiftVariableIdentifierName))"
         }
         
         let orderedFragmentSpreads = self.fragmentSpreads.ordered()
         let fragmentAssignments = orderedFragmentSpreads.map {
-            "\(indentation)self.\($0.swiftVariableIdentifierName) = try \($0.swiftStructTypeIdentifierString)(from: decoder)"
+            "\(indentation)self.\($0.swiftVariableIdentifierName) = try \(schemaName).\($0.swiftStructTypeIdentifierString)(from: decoder)"
         }
         
         let orderedInlineFragments = self.inlineFragments.ordered()
@@ -178,30 +178,30 @@ extension SelectionSetIR {
         return everything.joined(separator: "\n")
     }
     
-    public func genScalarPropertyVariableDeclarations(indentation: String, omit__typename: Bool = false) throws -> String {
+    public func genScalarPropertyVariableDeclarations(indentation: String, schemaName: String, omit__typename: Bool = false) throws -> String {
         // MARK: - __typename-injection:
         let orderedScalarFields = self.scalarFields.ordered(omitting__typename: omit__typename)
-        let fields = try orderedScalarFields.map { try $0.genVariableDeclaration(indentation: indentation) }
+        let fields = try orderedScalarFields.map { try $0.genVariableDeclaration(indentation: indentation, schemaName: schemaName) }
         return fields.joined(separator: "\n")
     }
     
     /// `VariableDecl`.
-    public func genFragmentSpreadPropertyVariableDeclarations(indentation: String) throws -> String {
+    public func genFragmentSpreadPropertyVariableDeclarations(indentation: String, schemaName: String) throws -> String {
         let orderedFragmentSpreads = self.fragmentSpreads.ordered()
         return try orderedFragmentSpreads.map {
-            try $0.genVariableDeclaration(indentation: indentation)
+            try $0.genVariableDeclaration(indentation: indentation, schemaName: schemaName)
         }.joined(separator: "\n")
     }
     
     /// `StructDecl`.
-    public func genObjectNestedStructDeclarations(indentation: String) throws -> (propertyVariableDeclarations: String, structDeclarations: String) {
-        let (propertyVariableDeclarations, structDeclarations) = try nestedStructDeclarations(nestedObjects: self.objectFields, indentation: indentation)
-        return (propertyVariableDeclarations.joined(separator: "\n"), structDeclarations.joined(separator: "\n"))
+    public func genObjectNestedStructDeclarations(indentation: String, schemaName: String) throws -> (propertyVariableDeclarations: String, structDeclarations: String) {
+        let (propertyVariableDeclarations, structDeclarations) = try nestedStructDeclarations(nestedObjects: self.objectFields, indentation: indentation, schemaName: schemaName)
+        return (propertyVariableDeclarations.joined(separator: "\n"), structDeclarations.joined(separator: "\n\n"))
     }
     
-    public func inlineFragmentSubStructDefinitions(indentation: String) throws -> (propertyVariableDeclarations: String, structDeclarations: String) {
-        let (propertyVariableDeclarations, structDeclarations) = try nestedStructDeclarations(nestedObjects: self.inlineFragments, indentation: indentation)
-        return (propertyVariableDeclarations.joined(separator: "\n"), structDeclarations.joined(separator: "\n"))
+    public func inlineFragmentSubStructDefinitions(indentation: String, schemaName: String) throws -> (propertyVariableDeclarations: String, structDeclarations: String) {
+        let (propertyVariableDeclarations, structDeclarations) = try nestedStructDeclarations(nestedObjects: self.inlineFragments, indentation: indentation, schemaName: schemaName)
+        return (propertyVariableDeclarations.joined(separator: "\n"), structDeclarations.joined(separator: "\n\n"))
     }
 }
 
@@ -209,10 +209,10 @@ extension SelectionSetIR {
 
 extension VariableDeclarationGeneratable {
     /// `VariableDecl`.
-    func genVariableDeclaration(indentation: String) throws -> String {
+    func genVariableDeclaration(indentation: String, schemaName: String) throws -> String {
         // TODO: gen documentation.
         let name = self.swiftVariableIdentifierName
-        let type = try self.swiftVariableTypeIdentifier()
+        let type = try self.swiftVariableTypeIdentifier(schemaName: schemaName)
         let propertyType = type.genSwiftType()
         let defaultValue = type.genSwiftDefaultInitializer()
         return "\(indentation)public private(set) var \(name): \(propertyType) = \(defaultValue)"
@@ -226,12 +226,12 @@ func genFunctionParameter(name: String, type: ReWrappedSwiftType) -> String {
     return "\(name): \(propertyType) = \(defaultValue)"
 }
 
-func nestedStructDeclarations(nestedObjects: [some NestedStructDeclarationGeneratable], indentation: String) throws -> (propertyVariableDeclarations: [String], structDeclarations: [String]) {
+func nestedStructDeclarations(nestedObjects: [some NestedStructDeclarationGeneratable], indentation: String, schemaName: String) throws -> (propertyVariableDeclarations: [String], structDeclarations: [String]) {
     let orderedObjectFields = nestedObjects.ordered()
     
     return try orderedObjectFields
         .map {
-            try $0.nestedStructDeclaration(indentation: indentation)
+            try $0.nestedStructDeclaration(indentation: indentation, schemaName: schemaName)
         }
         .reduce(into: (propertyVariableDeclarations: [String](), structDeclarations: [String]())) { result, defs in
             let (propertyDef, subStructDef) = defs
@@ -244,27 +244,26 @@ func nestedStructDeclarations(nestedObjects: [some NestedStructDeclarationGenera
 
 extension SelectionSetIR {
     /// `StructDecl`.
-    public func genStructDeclaration(parentField: any NestedStructDeclarationGeneratable, indentation: String) throws -> String {
+    public func genStructDeclaration(parentField: any NestedStructDeclarationGeneratable, indentation: String, schemaName: String) throws -> String {
         let baseTypeName = try parentField.swiftStructDeclarationTypeIdentifier().genSwiftBaseTypeName()
         let typeDefinition = "\(indentation)public struct \(baseTypeName): Codable {"
         let nextIndentation = indentation + "    "
-        let initializer = try self.genInitializerDeclaration(indentation: nextIndentation, parentFieldBaseTypeName: baseTypeName)
-        let innerCode = try self.genPropertyAndNestedStructDeclarations(indentation: nextIndentation)
+        let initializer = try self.genInitializerDeclaration(indentation: nextIndentation, schemaName: schemaName, parentFieldBaseTypeName: baseTypeName)
+        let innerCode = try self.genPropertyAndNestedStructDeclarations(indentation: nextIndentation, schemaName: schemaName)
         return """
         \(typeDefinition)
         \(initializer)
         
         \(innerCode)
         \(indentation)}
-        
         """
     }
     
     /// `InitializerDecl`.
-    public func genInitializerDeclaration(indentation: String, parentFieldBaseTypeName: String) throws -> String {
-        let params = try self.genInitializerDeclarationParameterList(parentFieldBaseTypeName: parentFieldBaseTypeName)
+    public func genInitializerDeclaration(indentation: String, schemaName: String, parentFieldBaseTypeName: String) throws -> String {
+        let params = try self.genInitializerDeclarationParameterList(schemaName: schemaName, parentFieldBaseTypeName: parentFieldBaseTypeName)
         let propertyAssignments = self.genInitializerCodeBlockAssignmentExpressions(indentation: "\(indentation)    ")
-        let decodableAssignments = try self.decodableCodeBlockAssignmentExpressions(indentation: "\(indentation)    ", parentFieldBaseTypeName: parentFieldBaseTypeName)
+        let decodableAssignments = try self.decodableCodeBlockAssignmentExpressions(indentation: "\(indentation)    ", schemaName: schemaName, parentFieldBaseTypeName: parentFieldBaseTypeName)
         
         return """
         \(indentation)public init(\(params)) {
@@ -277,30 +276,36 @@ extension SelectionSetIR {
         """
     }
     
-    public func genPropertyAndNestedStructDeclarations(indentation: String) throws -> String {
-        let scalarPropertyVariableDeclarations = try self.genScalarPropertyVariableDeclarations(indentation: indentation)
-        let fragmentSpreadPropertyDefinitions = try self.genFragmentSpreadPropertyVariableDeclarations(indentation: indentation)
+    public func genPropertyAndNestedStructDeclarations(indentation: String, schemaName: String) throws -> String {
+        let scalarPropertyVariableDeclarations = try self.genScalarPropertyVariableDeclarations(indentation: indentation, schemaName: schemaName)
+        let fragmentSpreadPropertyDefinitions = try self.genFragmentSpreadPropertyVariableDeclarations(indentation: indentation, schemaName: schemaName)
         let (objectSubStructPropertyDefinitions, objectSubStructDefinitions) =
-            try self.genObjectNestedStructDeclarations(indentation: indentation)
+        try self.genObjectNestedStructDeclarations(indentation: indentation, schemaName: schemaName)
         let (inlineFragmentSubStructPropertyDefinitions, inlineFragmentSubStructDefinitions) =
-            try self.inlineFragmentSubStructDefinitions(indentation: indentation)
+        try self.inlineFragmentSubStructDefinitions(indentation: indentation, schemaName: schemaName)
         
-        let selectionSetCode = [
+        let propertyDeclarations = [
             scalarPropertyVariableDeclarations,
             objectSubStructPropertyDefinitions,
             fragmentSpreadPropertyDefinitions,
             inlineFragmentSubStructPropertyDefinitions,
         ].compactMap { $0 == "" ? nil : $0 }.joined(separator: "\n\n")
         
-        let structCode = [
+        let subStructDeclarations = [
             objectSubStructDefinitions,
             inlineFragmentSubStructDefinitions,
         ].compactMap { $0 == "" ? nil : $0 }.joined(separator: "\n\n")
         
-        return """
-        \(selectionSetCode)
+        guard subStructDeclarations != "" else {
+            return """
+            \(propertyDeclarations)
+            """
+        }
         
-        \(structCode)
+        return """
+        \(propertyDeclarations)
+        
+        \(subStructDeclarations)
         """
     }
 }

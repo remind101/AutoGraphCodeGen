@@ -18,6 +18,12 @@
             "gqlDocumentsPath": "spacex-gql/Queries",
             "requestsOutputPath": "../libAutoGraphCodeGenTests/Products/spacex-gql",
             "outputSchemaName": "SpaceXGQLSchema"
+        },
+        {
+            "schemaPath": "anilist-gql/anilist-gql.json",
+            "gqlDocumentsPath": "anilist-gql/Queries",
+            "requestsOutputPath": "../libAutoGraphCodeGenTests/Products/anilist-gql",
+            "outputSchemaName": "AniListGQLSchema"
         }
     ]
 }

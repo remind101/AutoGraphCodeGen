@@ -126,7 +126,7 @@ extension `Type` {
                 let reWrapped = ReWrappedSwiftType.nullable(.val(base))
                 return SwiftType(base: base, reWrapped: reWrapped, prefixedReWrapped: nil)
             }
-            // or a custom scalar...
+            // or a custom scalar, which must be schema prefixed...
             else if
                 // This actually never returns `nil` because defaults to custom types
                 // so check it explicitly.
@@ -135,6 +135,15 @@ extension `Type` {
             {
                 let swiftScalar = SwiftScalarType(nameType: possibleScalar)
                 let base = swiftScalar.swiftVariableTypeIdentifier
+                let reWrapped = ReWrappedSwiftType.nullable(.val(base))
+                return SwiftType(base: base, reWrapped: reWrapped, prefixedReWrapped: reWrapped.withPrefixedBase("\(allTypes.outputSchemaName)."))
+            }
+            // or an enum or an input object, which must be schema prefixed...
+            else if
+                (allTypes.enumTypes[GraphQLTypeName(name: namedType.name)] != nil)
+                || (allTypes.inputObjectTypes[GraphQLTypeName(name: namedType.name)] != nil)
+            {
+                let base = namedType.name.value
                 let reWrapped = ReWrappedSwiftType.nullable(.val(base))
                 return SwiftType(base: base, reWrapped: reWrapped, prefixedReWrapped: reWrapped.withPrefixedBase("\(allTypes.outputSchemaName)."))
             }
@@ -193,12 +202,14 @@ extension OfType {
             }
             
             throw AutoGraphCodeGenError.codeGeneration(message: "Attempting to construct scalar swift type with non-scalar gql type")
+        case .enum(let typeRef), .inputObject(let typeRef):
+            let base = typeRef.name!
+            let reWrapped = ReWrappedSwiftType.nullable(.val(base))
+            return SwiftType(base: base, reWrapped: reWrapped, prefixedReWrapped: reWrapped.withPrefixedBase("\(allTypes.outputSchemaName)."))
         case
             .object(let typeRef),
             .interface(let typeRef),
-            .union(let typeRef),
-            .enum(let typeRef),
-            .inputObject(let typeRef):
+            .union(let typeRef):
                 let base = typeRef.name!
                 return SwiftType(base: base, reWrapped: .nullable(.val(base)), prefixedReWrapped: nil)
         case .list(_, ofType: let ofType):

@@ -52,29 +52,29 @@ extension InputObjectTypeIR: DocumentationGeneratable {
     ///         return inputsDict
     ///     }
     /// }
-    func generateCode() -> String {
-        let indentation = "    "
+    func generateCode(indentation: String) -> String {
         let nextIndentation = indentation + "    "
+        let nextNextIndentation = nextIndentation + "    "
         let args = self.inputFields.map { $0.genInitializerDeclarationParameterList() }.joined(separator: ", ")
-        let propertyAssignments = self.inputFields.map { $0.genInitializerCodeBlockAssignmentExpression() }.joined(separator: "\n\(nextIndentation)")
-        let dictionaryAssignments = self.inputFields.map { $0.genDictionaryAssignmentExpression() }.joined(separator: "\n\(nextIndentation)")
-        let propertyDeclarations = self.inputFields.map { $0.propertyDeclaration() }.joined(separator: "\n\(indentation)")
+        let propertyAssignments = self.inputFields.map { $0.genInitializerCodeBlockAssignmentExpression() }.joined(separator: "\n\(nextNextIndentation)")
+        let dictionaryAssignments = self.inputFields.map { $0.genDictionaryAssignmentExpression() }.joined(separator: "\n\(nextNextIndentation)")
+        let propertyDeclarations = self.inputFields.map { $0.propertyDeclaration() }.joined(separator: "\n\(nextIndentation)")
         let documentation = self.genDocumentationWithNewline(indentation: indentation)
         
         return documentation + """
-        public struct \(self.graphQLTypeName.value): Encodable, VariableInputParameterEncodable {
-            \(propertyDeclarations)
+        \(indentation)public struct \(self.graphQLTypeName.value): Encodable, VariableInputParameterEncodable {
+        \(indentation)    \(propertyDeclarations)
         
-            public init(\(args)) {
-                \(propertyAssignments)
-            }
+        \(indentation)    public init(\(args)) {
+        \(indentation)        \(propertyAssignments)
+        \(indentation)    }
         
-            public var encodedAsVariableInputParameter: any VariableInputParameterEncodable {
-                var \(kInputsDictionaryName) = [AnyHashable : any VariableInputParameterEncodable]()
-                \(dictionaryAssignments)
-                return \(kInputsDictionaryName)
-            }
-        }
+        \(indentation)    public var encodedAsVariableInputParameter: any VariableInputParameterEncodable {
+        \(indentation)        var \(kInputsDictionaryName) = [AnyHashable : any VariableInputParameterEncodable]()
+        \(indentation)        \(dictionaryAssignments)
+        \(indentation)        return \(kInputsDictionaryName)
+        \(indentation)    }
+        \(indentation)}
         """
     }
     

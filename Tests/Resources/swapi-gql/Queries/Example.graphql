@@ -1,4 +1,4 @@
-query ExampleQuery($nodeId: ID!, $after: String, $first: Int, $last: Int) {
+query ExampleStarWars($nodeId: ID!, $after: String, $first: Int, $last: Int) {
   node(id: $nodeId) {
     id
     ... on Film {
@@ -76,4 +76,15 @@ fragment CharacterConnFrag on FilmCharactersConnection {
     hasPreviousPage
     alias1: hasPreviousPage
   }
+}
+
+query TestTopLevelFragment {
+  person {
+    ...PersonFrag
+  }
+}
+
+fragment PersonFrag on Person {
+  id
+  birthYear
 }

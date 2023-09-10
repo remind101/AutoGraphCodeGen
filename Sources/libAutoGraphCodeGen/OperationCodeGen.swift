@@ -8,21 +8,23 @@ extension OperationDefinitionIR {
         let nextIndentation = indentation + "    "
         let nextNextIndentation = nextIndentation + "    "
         let initializerAndInputVariableProperties = try self.genInitializerAndInputVariablePropertyDeclarations(indentation: nextIndentation)
-        let scalarPropertyDefinitions = try self.selectionSet.genScalarPropertyVariableDeclarations(indentation: nextNextIndentation, omit__typename: true)
-        let fragmentSpreadPropertyDefinitions = try self.selectionSet.genFragmentSpreadPropertyVariableDeclarations(indentation: nextNextIndentation)
+        let scalarPropertyDefinitions = try self.selectionSet.genScalarPropertyVariableDeclarations(indentation: nextNextIndentation, schemaName: outputSchemaName, omit__typename: true)
+        let fragmentSpreadPropertyDefinitions = try self.selectionSet.genFragmentSpreadPropertyVariableDeclarations(indentation: nextNextIndentation, schemaName: outputSchemaName)
         let (objectSubStructPropertyDefinitions, objectSubStructDefinitions) =
-        try self.selectionSet.genObjectNestedStructDeclarations(indentation: nextIndentation)
+        try self.selectionSet.genObjectNestedStructDeclarations(indentation: nextIndentation, schemaName: outputSchemaName)
         let (inlineFragmentSubStructPropertyDefinitions, inlineFragmentSubStructDefinitions) =
-        try self.selectionSet.inlineFragmentSubStructDefinitions(indentation: nextIndentation)
+        try self.selectionSet.inlineFragmentSubStructDefinitions(indentation: nextIndentation, schemaName: outputSchemaName)
         let queryCode = try self.generateQueryCode(outputSchemaName: outputSchemaName, indentation: nextIndentation)
         
-        let selectionSetCode = [
+        // NOTE: That we expand the indentation here rather than deeper because the generators operate
+        // over all structs (operations and nested) yet at for the `Data` struct we don't indent the struct
+        // declarations at the same level as its properties, because we put the struct declarations outside
+        // the Data struct.
+        let dataPropertyDeclarations = [
             scalarPropertyDefinitions,
-            // TODO: needs additional indentation. inject into `genObjectNestedStructDeclarations`.
-            objectSubStructPropertyDefinitions,
+            objectSubStructPropertyDefinitions.replacingOccurrences(of: nextIndentation, with: nextNextIndentation),
             fragmentSpreadPropertyDefinitions,
-            // TODO: needs additional indentation 😡.
-            inlineFragmentSubStructPropertyDefinitions,
+            inlineFragmentSubStructPropertyDefinitions.replacingOccurrences(of: nextIndentation, with: nextNextIndentation),
         ].compactMap { $0 == "" ? nil : $0 }.joined(separator: "\n\n")
         
         let structCode = [
@@ -30,18 +32,17 @@ extension OperationDefinitionIR {
             inlineFragmentSubStructDefinitions,
         ].compactMap { $0 == "" ? nil : $0 }.joined(separator: "\n\n")
         
-        let dataInitializer = try self.dataStructInitializerDeclaration(indentation: nextNextIndentation)
+        let dataInitializer = try self.dataStructInitializerDeclaration(indentation: nextNextIndentation, schemaName: outputSchemaName)
         
         return """
         \(typeDefinition)
-        
         \(nextIndentation)public typealias SerializedObject = Data
         
         \(initializerAndInputVariableProperties)
         
         \(nextIndentation)public var data: Data?
         \(nextIndentation)public struct Data: Codable {
-        \(selectionSetCode)
+        \(dataPropertyDeclarations)
         
         \(dataInitializer)
         \(nextIndentation)}
@@ -49,7 +50,6 @@ extension OperationDefinitionIR {
         \(queryCode)
         \(structCode)
         \(indentation)}
-        
         """
     }
     
@@ -73,8 +73,8 @@ extension OperationDefinitionIR {
     }
     
     /// `InitializerDecl`.
-    public func dataStructInitializerDeclaration(indentation: String) throws -> String {
-        let params = try self.selectionSet.genInitializerDeclarationParameterList(parentFieldBaseTypeName: nil, omit__typename: true)
+    public func dataStructInitializerDeclaration(indentation: String, schemaName: String) throws -> String {
+        let params = try self.selectionSet.genInitializerDeclarationParameterList(schemaName: schemaName, parentFieldBaseTypeName: nil, omit__typename: true)
         let propertyAssignments = self.selectionSet.genInitializerCodeBlockAssignmentExpressions(indentation: "\(indentation)    ", omit__typename: true)
         
         return """

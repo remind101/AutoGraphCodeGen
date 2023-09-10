@@ -1,0 +1,13 @@
+query ExampleAniListWithEnumField {
+  Page {
+    media {
+      type
+      siteUrl
+      title {
+        english
+        native
+      }
+      description
+    }
+  }
+}

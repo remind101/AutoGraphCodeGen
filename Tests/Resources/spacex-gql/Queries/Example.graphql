@@ -1,4 +1,4 @@
-query ExampleQuery {
+query ExampleSpaceX {
   company {
     ceo
   }
@@ -6,6 +6,21 @@ query ExampleQuery {
     apoapsis_au
   }
 }
+
+# Test Input Objects and intersection with other Query.
+query ExampleSpaceX2($limit: Int) {
+  company {
+    ceo
+  }
+  capsules(find: {id: 4, mission: "cool", type: "rocket"}, limit: $limit) {
+    id
+    missions {
+      name
+      flight
+    }
+  }
+}
+
 
 # users_set_input effectively tests recursive input types.
 mutation Mutation($where: users_bool_exp!, $set: users_set_input) {

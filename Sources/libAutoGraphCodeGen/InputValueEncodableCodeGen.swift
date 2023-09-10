@@ -7,6 +7,8 @@ import AutoGraphParser
 // refactoring of `AutoGraph` though that is probably the right direction.
 // Once that's solved we can completely remove `encodedAsVariableInputParameter` junk.
 
+// TODO: Hack -- Dictionary and Array should not conform to this directly, need further specialization.
+
 public struct OptionalInputValueGenerator {
     public static let TypeName = "OptionalInputValue"
     public static let typeDeclaration =

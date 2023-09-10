@@ -88,7 +88,7 @@ struct FieldIR: Hashable, VariableDeclarationGeneratable, Deprecatable {
         self.deprecationReason = __field.deprecationReason
     }
     
-    func swiftVariableTypeIdentifier() -> ReWrappedSwiftType {
+    func swiftVariableTypeIdentifier(schemaName: String) -> ReWrappedSwiftType {
         self.swiftType.prefixedReWrapped ?? self.swiftType.reWrapped
     }
     
@@ -122,7 +122,7 @@ struct ObjectFieldIR: NestedStructDeclarationGeneratable {
         }
     }
     
-    func swiftVariableTypeIdentifier() throws -> ReWrappedSwiftType {
+    func swiftVariableTypeIdentifier(schemaName: String) throws -> ReWrappedSwiftType {
         try self.swiftStructDeclarationTypeIdentifier()
     }
 }
@@ -153,12 +153,12 @@ struct InlineFragmentIR: NestedStructDeclarationGeneratable {
     /// e.g. "AsUser".
     /// Always returns `nullable` identifier because cast to `InlineFragment`s may
     /// fail for `Union` and `Interface` types.
-    func swiftVariableTypeIdentifier() -> ReWrappedSwiftType {
-        .nullable(.val(self.swiftStructTypeIdentifierString))
+    func swiftVariableTypeIdentifier(schemaName: String) -> ReWrappedSwiftType {
+        self.swiftStructDeclarationTypeIdentifier()
     }
     
     func swiftStructDeclarationTypeIdentifier() -> ReWrappedSwiftType {
-        self.swiftVariableTypeIdentifier()
+        .nullable(.val(self.swiftStructTypeIdentifierString))
     }
     
     // TODO: add `consuming` when Swift 5.9 launches.
@@ -184,14 +184,14 @@ extension SelectionSet {
             switch selection {
             case .field(let field):
                 switch try field.lowerToIR(onParent: selectionSetType, along: traversedFields, allTypes: allTypes) {
-                case (let ir, let fieledLiftedEnumTypes):
+                case (let ir, let fieldLiftedEnumTypes):
                     switch ir {
                     case .scalar(field: let field):
                         scalarFields.append(field)
                     case .object(field: let field, selectionSet: let selectionSet):
                         objectFields.append(ObjectFieldIR(field: field, selectionSet: selectionSet))
                     }
-                    liftedEnumTypes.merge(fieledLiftedEnumTypes, uniquingKeysWith: { first, _ in first })
+                    liftedEnumTypes.merge(fieldLiftedEnumTypes, uniquingKeysWith: { first, _ in first })
                 }
             case .fragmentSpread(let fragmentSpread):
                 try fragmentSpread.validate(onParent: selectionSetType, along: traversedFields, allTypes: allTypes)

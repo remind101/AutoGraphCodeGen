@@ -1,4 +1,4 @@
-query ExampleQuery(
+query ExamplePokemon(
   $pokemonV2AbilityByPkId: Int!,
   # Though the codegeneration is fast, it takes a tremondous effort for swift to compile
   # the code generated output of with this arg because the combinatorial complexity is off

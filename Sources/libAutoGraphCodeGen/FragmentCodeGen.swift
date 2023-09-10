@@ -6,10 +6,10 @@ extension FragmentDefinitionIR {
         return "\(indentation)public struct \(self.fragment.name.value): Codable {"
     }
     
-    public func initializer(indentation: String) throws -> String {
-        let params = try self.selectionSet.genInitializerDeclarationParameterList(parentFieldBaseTypeName: nil)
+    public func initializer(indentation: String, outputSchemaName: String) throws -> String {
+        let params = try self.selectionSet.genInitializerDeclarationParameterList(schemaName: outputSchemaName, parentFieldBaseTypeName: nil)
         let propertyAssignments = self.selectionSet.genInitializerCodeBlockAssignmentExpressions(indentation: "\(indentation)    ")
-        let decodableAssignments = try self.selectionSet.decodableCodeBlockAssignmentExpressions(indentation: "\(indentation)    ", parentFieldBaseTypeName: nil)
+        let decodableAssignments = try self.selectionSet.decodableCodeBlockAssignmentExpressions(indentation: "\(indentation)    ", schemaName: outputSchemaName, parentFieldBaseTypeName: nil)
         
         return """
         \(indentation)public init(\(params)) {
@@ -25,13 +25,13 @@ extension FragmentDefinitionIR {
     public func generateCode(outputSchemaName: String, indentation: String) throws -> String {
         let nextIndentation = indentation + "    "
         let typeDefinition = self.structDeclarationStart(indentation: indentation)
-        let initializer = try self.initializer(indentation: nextIndentation)
-        let scalarPropertyDefinitions = try self.selectionSet.genScalarPropertyVariableDeclarations(indentation: nextIndentation)
-        let fragmentSpreadPropertyDefinitions = try self.selectionSet.genFragmentSpreadPropertyVariableDeclarations(indentation: nextIndentation)
+        let initializer = try self.initializer(indentation: nextIndentation, outputSchemaName: outputSchemaName)
+        let scalarPropertyDefinitions = try self.selectionSet.genScalarPropertyVariableDeclarations(indentation: nextIndentation, schemaName: outputSchemaName)
+        let fragmentSpreadPropertyDefinitions = try self.selectionSet.genFragmentSpreadPropertyVariableDeclarations(indentation: nextIndentation, schemaName: outputSchemaName)
         let (objectSubStructPropertyDefinitions, objectSubStructDefinitions) =
-        try self.selectionSet.genObjectNestedStructDeclarations(indentation: nextIndentation)
+        try self.selectionSet.genObjectNestedStructDeclarations(indentation: nextIndentation, schemaName: outputSchemaName)
         let (inlineFragmentSubStructPropertyDefinitions, inlineFragmentSubStructDefinitions) =
-        try self.selectionSet.inlineFragmentSubStructDefinitions(indentation: nextIndentation)
+        try self.selectionSet.inlineFragmentSubStructDefinitions(indentation: nextIndentation, schemaName: outputSchemaName)
         let codingKeys = try self.generateCodingKeys(indentation: nextIndentation)
         let queryCode = try self.generateQueryCode(fragmentDefinition: self.fragment, outputSchemaName: outputSchemaName, indentation: nextIndentation)
         
@@ -56,10 +56,8 @@ extension FragmentDefinitionIR {
         \(selectionSetCode)
         
         \(queryCode)
-        \(structCode)
-        \(indentation)}
-        
         """
+        + (structCode != "" ? "\n\(structCode)\n\(indentation)}" : "\(indentation)}")
     }
     
     public func generateQueryCode(fragmentDefinition: FragmentDefinition, outputSchemaName: String, indentation: String) throws -> String {

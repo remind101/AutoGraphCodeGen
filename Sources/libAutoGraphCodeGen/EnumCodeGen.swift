@@ -2,7 +2,6 @@ import Foundation
 import AutoGraphParser
 
 extension EnumType: DocumentationGeneratable {
-    // TODO: include this under the schema's namespace
     /// `EnumDecl` in Swift AST.
     ///
     /// For
@@ -63,24 +62,24 @@ extension EnumType: DocumentationGeneratable {
     ///     }
     /// }
     /// ```
-    func genEnumDeclaration() -> String {
-        let indentation = "    "
-        let documentation = self.genDocumentationWithNewline(indentation: "") // May return empty.
-        let cases = self.genCaseMemberDeclarationList(indentation: indentation)
-        let rawInit = self.genRawValueInitializerDeclaration(indentation: indentation)
-        let rawValue = self.genRawValueVariableDeclaration(indentation: indentation)
-        let decodeInit = self.genDecodeValueInitializerDeclaration(indentation: indentation)
+    func generateEnumDeclaration(indentation: String) -> String {
+        let nextIndentation = "    " + indentation
+        let documentation = self.genDocumentationWithNewline(indentation: indentation) // May return empty.
+        let cases = self.genCaseMemberDeclarationList(indentation: nextIndentation)
+        let rawInit = self.genRawValueInitializerDeclaration(indentation: nextIndentation)
+        let rawValue = self.genRawValueVariableDeclaration(indentation: nextIndentation)
+        let decodeInit = self.genDecodeValueInitializerDeclaration(indentation: nextIndentation)
         
         return documentation + """
-        public enum \(self.name): RawRepresentable, Codable, Hashable, EnumVariableInputParameterEncodable, EnumValueProtocol {
-            public typealias RawValue = String
+        \(indentation)public enum \(self.name): RawRepresentable, Codable, Hashable, EnumVariableInputParameterEncodable, EnumValueProtocol {
+        \(indentation)    public typealias RawValue = String
         
         \(cases)
-            case __unknown(RawValue)
+        \(nextIndentation)case __unknown(RawValue)
         
-            public init() {
-                self = .__unknown("")
-            }
+        \(nextIndentation)public init() {
+        \(nextIndentation)    self = .__unknown("")
+        \(nextIndentation)}
         
         \(rawInit)
         
@@ -88,10 +87,10 @@ extension EnumType: DocumentationGeneratable {
         
         \(rawValue)
         
-            public func graphQLInputValue() throws -> String {
-                return self.rawValue
-            }
-        }
+        \(nextIndentation)public func graphQLInputValue() throws -> String {
+        \(nextIndentation)    return self.rawValue
+        \(nextIndentation)}
+        \(indentation)}
         """
     }
     
@@ -154,10 +153,10 @@ extension EnumType: DocumentationGeneratable {
     func genDecodeValueInitializerDeclaration(indentation: String) -> String {
         return """
         \(indentation)public init(from decoder: Decoder) throws {
-        \(indentation)\(indentation)let container = try decoder.singleValueContainer()
-        \(indentation)\(indentation)let value = try container.decode(String.self)
+        \(indentation)    let container = try decoder.singleValueContainer()
+        \(indentation)    let value = try container.decode(String.self)
         
-        \(indentation)\(indentation)self = \(self.name)(rawValue: value) ?? .__unknown(value)
+        \(indentation)    self = \(self.name)(rawValue: value) ?? .__unknown(value)
         \(indentation)}
         """
     }

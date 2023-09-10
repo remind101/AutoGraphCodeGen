@@ -374,7 +374,7 @@ extension Value {
         case .list(let value):
             return "[" + value.map { $0.generateQueryBuilderInputValue() }.joined(separator: ", ") + "]"
         case .object(let objectValue):
-            return "[" + objectValue.fields.map { "\"\($0.name.value)\" : \($0.value.generateQueryBuilderInputValue())" }.joined(separator: ", ") + "]"
+            return "[" + objectValue.fields.map { "\"\($0.name.value)\" : \($0.value.generateQueryBuilderInputValue())" }.joined(separator: ", ") + "] as [String: Any]"
         }
     }
 }
