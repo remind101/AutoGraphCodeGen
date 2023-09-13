@@ -72,10 +72,11 @@ extension SelectionSetIR {
         let orderedObjectFields = self.objectFields.ordered()
         let nestedObjectStructParameters = try orderedObjectFields.map { objectField in
             let type = try {
-                if let parentFieldBaseTypeName = parentFieldBaseTypeName {
+                let baseName = try objectField.swiftVariableTypeIdentifier(schemaName: schemaName)
+                if let parentFieldBaseTypeName = parentFieldBaseTypeName, parentFieldBaseTypeName != baseName.genSwiftBaseTypeName() {
                     return try objectField.swiftVariableTypeIdentifier(schemaName: schemaName).withPrefixedBase("\(parentFieldBaseTypeName).")
                 }
-                return try objectField.swiftVariableTypeIdentifier(schemaName: schemaName)
+                return baseName
             }()
             return genFunctionParameter(name: objectField.swiftVariableIdentifierName, type: type)
         }
@@ -138,10 +139,11 @@ extension SelectionSetIR {
         let orderedObjectFields = self.objectFields.ordered()
         let objectStructAssignments = try orderedObjectFields.map { objectField in
             let type = try {
-                if let parentFieldBaseTypeName = parentFieldBaseTypeName {
+                let baseName = try objectField.swiftVariableTypeIdentifier(schemaName: schemaName)
+                if let parentFieldBaseTypeName = parentFieldBaseTypeName, parentFieldBaseTypeName != baseName.genSwiftBaseTypeName() {
                     return try objectField.swiftVariableTypeIdentifier(schemaName: schemaName).withPrefixedBase("\(parentFieldBaseTypeName).")
                 }
-                return try objectField.swiftVariableTypeIdentifier(schemaName: schemaName)
+                return baseName
             }()
             return "\(indentation)self.\(objectField.swiftVariableIdentifierName) = try values.decode(\(type.genSwiftType()).self, forKey: .\(objectField.swiftVariableIdentifierName))"
         }
