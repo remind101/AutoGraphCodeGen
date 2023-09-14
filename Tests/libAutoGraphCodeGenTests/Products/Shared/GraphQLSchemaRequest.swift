@@ -76,10 +76,6 @@ extension EnumVariableInputParameterEncodable {
     }
 }
 
-extension UUID: VariableInputParameterEncodable {
-    public var encodedAsVariableInputParameter: VariableInputParameterEncodable { return self }
-}
-
 extension Bool: VariableInputParameterEncodable {
     public var encodedAsVariableInputParameter: VariableInputParameterEncodable { return self }
 }

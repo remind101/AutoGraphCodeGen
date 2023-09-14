@@ -63,10 +63,6 @@ public struct VariableInputParameterEncodableGenerator {
         }
     }
     
-    extension UUID: VariableInputParameterEncodable {
-        public var encodedAsVariableInputParameter: VariableInputParameterEncodable { return self }
-    }
-    
     extension Bool: VariableInputParameterEncodable {
         public var encodedAsVariableInputParameter: VariableInputParameterEncodable { return self }
     }

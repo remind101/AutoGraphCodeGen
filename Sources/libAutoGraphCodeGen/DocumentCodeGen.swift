@@ -50,7 +50,7 @@ extension AllTypes {
             """
         let fileText = imports + (
             configuration.additionalImports.count > 0
-            ? configuration.additionalImports.joined(separator: "\n") + "\n"
+            ? configuration.additionalImports.map { "import \($0)" }.joined(separator: "\n") + "\n"
             : ""
         )
         
