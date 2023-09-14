@@ -1,0 +1,29 @@
+{
+    "outputProductsPath": "../libAutoGraphCodeGenTests/Products",
+    "schemas": [
+        {
+            "schemaPath": "poke-gql/poke-gql.json",
+            "gqlDocumentsPath": "poke-gql/Queries",
+            "requestsOutputPath": "../libAutoGraphCodeGenTests/Products/poke-gql",
+            "outputSchemaName": "PokeGQLSchema"
+        },
+        {
+            "schemaPath": "swapi-gql/swapi-gql.json",
+            "gqlDocumentsPath": "swapi-gql/Queries",
+            "requestsOutputPath": "../libAutoGraphCodeGenTests/Products/swapi-gql",
+            "outputSchemaName": "SWAPIGQLSchema"
+        },
+        {
+            "schemaPath": "spacex-gql/spacex-gql.json",
+            "gqlDocumentsPath": "spacex-gql/Queries",
+            "requestsOutputPath": "../libAutoGraphCodeGenTests/Products/spacex-gql",
+            "outputSchemaName": "SpaceXGQLSchema"
+        },
+        {
+            "schemaPath": "anilist-gql/anilist-gql.json",
+            "gqlDocumentsPath": "anilist-gql/Queries",
+            "requestsOutputPath": "../libAutoGraphCodeGenTests/Products/anilist-gql",
+            "outputSchemaName": "AniListGQLSchema"
+        }
+    ]
+}

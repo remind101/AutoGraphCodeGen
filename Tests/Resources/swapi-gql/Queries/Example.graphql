@@ -1,0 +1,90 @@
+query ExampleStarWars($nodeId: ID!, $after: String, $first: Int, $last: Int) {
+  node(id: $nodeId) {
+    id
+    ... on Film {
+      director
+      id
+      planetConnection(first: $first, last: $last) {
+        totalCount
+      }
+      # TODO: Fix having identical names.
+      #planetConnection {
+      #  totalCount
+      #}
+    }
+    ... on Person {
+      birthYear
+      hairColor
+    }
+  }
+  allFilms(after: $after) {
+    edges {
+      node {
+        ... on Film {
+          episodeID
+        }
+        characterConnection {
+          ...CharacterConnFrag
+          pageInfo {
+            hasPreviousPage
+            startCursor
+            hasNextPage
+            endCursor
+          }
+          characters {
+            birthYear
+            created
+            edited
+            eyeColor
+            homeworld {
+              climates
+              filmConnection {
+                edges {
+                  node {
+                    characterConnection {
+                      characters {
+                        filmConnection {
+                          films {
+                            id
+                            episodeID
+                            openingCrawl
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            vehicleConnection {
+              edges {
+                node {
+                  crew
+                  edited
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+fragment CharacterConnFrag on FilmCharactersConnection {
+  pageInfo {
+    hasPreviousPage
+    alias1: hasPreviousPage
+  }
+}
+
+query TestTopLevelFragment {
+  person {
+    ...PersonFrag
+  }
+}
+
+fragment PersonFrag on Person {
+  id
+  birthYear
+}

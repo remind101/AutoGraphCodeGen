@@ -1,0 +1,44 @@
+query ExampleSpaceX {
+  company {
+    ceo
+  }
+  roadster {
+    apoapsis_au
+  }
+}
+
+# Test Input Objects and intersection with other Query.
+query ExampleSpaceX2($limit: Int) {
+  company {
+    ceo
+  }
+  capsules(find: {id: 4, mission: "cool", type: "rocket"}, limit: $limit) {
+    id
+    missions {
+      name
+      flight
+    }
+  }
+}
+
+
+# users_set_input effectively tests recursive input types.
+mutation Mutation($where: users_bool_exp!, $set: users_set_input) {
+  update_users(where: $where, _set: $set) {
+    affected_rows
+    returning {
+      rocket
+      timestamp
+      twitter
+    }
+  }
+}
+
+subscription Subscription($limit: Int, $offset: Int, $distinctOn: [users_select_column!]) {
+  users(limit: $limit, offset: $offset, distinct_on: $distinctOn) {
+    name
+    rocket
+    timestamp
+    id
+  }
+}

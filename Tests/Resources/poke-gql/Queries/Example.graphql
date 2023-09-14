@@ -1,0 +1,26 @@
+query ExamplePokemon(
+  $pokemonV2AbilityByPkId: Int!,
+  # Though the codegeneration is fast, it takes a tremondous effort for swift to compile
+  # the code generated output of with this arg because the combinatorial complexity is off
+  # the charts. Only uncomment as a stress test.
+  #$orderBy: [pokemon_v2_abilityflavortext_order_by!]
+) {
+  pokemon_v2_ability_by_pk(id: $pokemonV2AbilityByPkId) {
+    generation_id
+    id
+    is_main_series @skip(if: false)
+    name
+    pokemon_v2_abilitychanges {
+      ability_id
+      pokemon_v2_ability {
+        name @specifiedBy
+        is_main_series
+        pokemon_v2_abilityflavortexts_aggregate(order_by: $orderBy) {
+          aggregate {
+            count
+          }
+        }
+      }
+    }
+  }
+}
