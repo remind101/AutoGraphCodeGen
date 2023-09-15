@@ -14,9 +14,10 @@ query ExamplePokemon(
       ability_id
       pokemon_v2_ability {
         name @specifiedBy
+        other_name: name @specifiedBy
         is_main_series
         pokemon_v2_abilityflavortexts_aggregate(order_by: $orderBy) {
-          aggregate {
+          agg: aggregate {
             count
           }
         }

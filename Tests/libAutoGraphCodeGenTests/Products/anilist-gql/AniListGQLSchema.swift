@@ -71,18 +71,18 @@ public struct ExampleAniListWithEnumFieldQuery: AutoGraphQLRequest {
     public var operation: AutoGraphQL.Operation {
         return AutoGraphQL.Operation(type: .query, name: "ExampleAniListWithEnumField", variableDefinitions: nil, directives: nil, selectionSet: [
             Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-            Selection.field(name: "Page", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+            Selection.field(name: "Page", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                 Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                Selection.field(name: "media", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                Selection.field(name: "media", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                     Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                    Selection.field(name: "type", alias: "", arguments: nil, directives: nil, type: .scalar),
-                    Selection.field(name: "siteUrl", alias: "", arguments: nil, directives: nil, type: .scalar),
-                    Selection.field(name: "title", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                    Selection.field(name: "type", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                    Selection.field(name: "siteUrl", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                    Selection.field(name: "title", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                         Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                        Selection.field(name: "english", alias: "", arguments: nil, directives: nil, type: .scalar),
-                        Selection.field(name: "native", alias: "", arguments: nil, directives: nil, type: .scalar)
+                        Selection.field(name: "english", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                        Selection.field(name: "native", alias: nil, arguments: nil, directives: nil, type: .scalar)
                     ])),
-                    Selection.field(name: "description", alias: "", arguments: nil, directives: nil, type: .scalar)
+                    Selection.field(name: "description", alias: nil, arguments: nil, directives: nil, type: .scalar)
                 ]))
             ]))
         ])

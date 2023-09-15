@@ -28,9 +28,9 @@ public enum SWAPIGQLSchema {
         public static var fragments: [FragmentDefinition] {
             let fragment = FragmentDefinition(name: "CharacterConnFrag", type: "FilmCharactersConnection", directives: nil, selectionSet: [
                 Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                Selection.field(name: "pageInfo", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                Selection.field(name: "pageInfo", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                     Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                    Selection.field(name: "hasPreviousPage", alias: "", arguments: nil, directives: nil, type: .scalar),
+                    Selection.field(name: "hasPreviousPage", alias: nil, arguments: nil, directives: nil, type: .scalar),
                     Selection.field(name: "hasPreviousPage", alias: "alias1", arguments: nil, directives: nil, type: .scalar)
                 ]))
             ])!
@@ -93,8 +93,8 @@ public enum SWAPIGQLSchema {
         public static var fragments: [FragmentDefinition] {
             let fragment = FragmentDefinition(name: "PersonFrag", type: "Person", directives: nil, selectionSet: [
                 Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                Selection.field(name: "id", alias: "", arguments: nil, directives: nil, type: .scalar),
-                Selection.field(name: "birthYear", alias: "", arguments: nil, directives: nil, type: .scalar)
+                Selection.field(name: "id", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                Selection.field(name: "birthYear", alias: nil, arguments: nil, directives: nil, type: .scalar)
             ])!
 
             let fragments = [fragment]
@@ -146,70 +146,70 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
     public var operation: AutoGraphQL.Operation {
         return AutoGraphQL.Operation(type: .query, name: "ExampleStarWars", variableDefinitions: [try! AnyVariableDefinition(name: "nodeId", typeName: .nonNull(.scalar(.id)), defaultValue: nil), try! AnyVariableDefinition(name: "after", typeName: .scalar(.string), defaultValue: nil), try! AnyVariableDefinition(name: "first", typeName: .scalar(.int), defaultValue: nil), try! AnyVariableDefinition(name: "last", typeName: .scalar(.int), defaultValue: nil)], directives: nil, selectionSet: [
             Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-            Selection.field(name: "node", alias: "", arguments: ["id" : Variable(name: "nodeId")], directives: nil, type: .object(selectionSet: [
+            Selection.field(name: "node", alias: nil, arguments: ["id" : Variable(name: "nodeId")], directives: nil, type: .object(selectionSet: [
                 Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                Selection.field(name: "id", alias: "", arguments: nil, directives: nil, type: .scalar),
+                Selection.field(name: "id", alias: nil, arguments: nil, directives: nil, type: .scalar),
                 Selection.inlineFragment(namedType: "Film", directives: nil, selectionSet: [
                     Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                    Selection.field(name: "director", alias: "", arguments: nil, directives: nil, type: .scalar),
-                    Selection.field(name: "id", alias: "", arguments: nil, directives: nil, type: .scalar),
-                    Selection.field(name: "planetConnection", alias: "", arguments: ["first" : Variable(name: "first"), "last" : Variable(name: "last")], directives: nil, type: .object(selectionSet: [
+                    Selection.field(name: "director", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                    Selection.field(name: "id", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                    Selection.field(name: "planetConnection", alias: nil, arguments: ["first" : Variable(name: "first"), "last" : Variable(name: "last")], directives: nil, type: .object(selectionSet: [
                         Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                        Selection.field(name: "totalCount", alias: "", arguments: nil, directives: nil, type: .scalar)
+                        Selection.field(name: "totalCount", alias: nil, arguments: nil, directives: nil, type: .scalar)
                     ]))
                 ]),
                 Selection.inlineFragment(namedType: "Person", directives: nil, selectionSet: [
                     Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                    Selection.field(name: "birthYear", alias: "", arguments: nil, directives: nil, type: .scalar),
-                    Selection.field(name: "hairColor", alias: "", arguments: nil, directives: nil, type: .scalar)
+                    Selection.field(name: "birthYear", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                    Selection.field(name: "hairColor", alias: nil, arguments: nil, directives: nil, type: .scalar)
                 ])
             ])),
-            Selection.field(name: "allFilms", alias: "", arguments: ["after" : Variable(name: "after")], directives: nil, type: .object(selectionSet: [
+            Selection.field(name: "allFilms", alias: nil, arguments: ["after" : Variable(name: "after")], directives: nil, type: .object(selectionSet: [
                 Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                Selection.field(name: "edges", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                Selection.field(name: "edges", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                     Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                    Selection.field(name: "node", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                    Selection.field(name: "node", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                         Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
                         Selection.inlineFragment(namedType: "Film", directives: nil, selectionSet: [
                             Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                            Selection.field(name: "episodeID", alias: "", arguments: nil, directives: nil, type: .scalar)
+                            Selection.field(name: "episodeID", alias: nil, arguments: nil, directives: nil, type: .scalar)
                         ]),
-                        Selection.field(name: "characterConnection", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                        Selection.field(name: "characterConnection", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                             Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
                             Selection.fragmentSpread(name: "CharacterConnFrag", directives: nil),
-                            Selection.field(name: "pageInfo", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                            Selection.field(name: "pageInfo", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                                 Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                                Selection.field(name: "hasPreviousPage", alias: "", arguments: nil, directives: nil, type: .scalar),
-                                Selection.field(name: "startCursor", alias: "", arguments: nil, directives: nil, type: .scalar),
-                                Selection.field(name: "hasNextPage", alias: "", arguments: nil, directives: nil, type: .scalar),
-                                Selection.field(name: "endCursor", alias: "", arguments: nil, directives: nil, type: .scalar)
+                                Selection.field(name: "hasPreviousPage", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                                Selection.field(name: "startCursor", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                                Selection.field(name: "hasNextPage", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                                Selection.field(name: "endCursor", alias: nil, arguments: nil, directives: nil, type: .scalar)
                             ])),
-                            Selection.field(name: "characters", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                            Selection.field(name: "characters", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                                 Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                                Selection.field(name: "birthYear", alias: "", arguments: nil, directives: nil, type: .scalar),
-                                Selection.field(name: "created", alias: "", arguments: nil, directives: nil, type: .scalar),
-                                Selection.field(name: "edited", alias: "", arguments: nil, directives: nil, type: .scalar),
-                                Selection.field(name: "eyeColor", alias: "", arguments: nil, directives: nil, type: .scalar),
-                                Selection.field(name: "homeworld", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                                Selection.field(name: "birthYear", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                                Selection.field(name: "created", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                                Selection.field(name: "edited", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                                Selection.field(name: "eyeColor", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                                Selection.field(name: "homeworld", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                                     Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                                    Selection.field(name: "climates", alias: "", arguments: nil, directives: nil, type: .scalar),
-                                    Selection.field(name: "filmConnection", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                                    Selection.field(name: "climates", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                                    Selection.field(name: "filmConnection", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                                         Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                                        Selection.field(name: "edges", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                                        Selection.field(name: "edges", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                                             Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                                            Selection.field(name: "node", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                                            Selection.field(name: "node", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                                                 Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                                                Selection.field(name: "characterConnection", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                                                Selection.field(name: "characterConnection", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                                                     Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                                                    Selection.field(name: "characters", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                                                    Selection.field(name: "characters", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                                                         Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                                                        Selection.field(name: "filmConnection", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                                                        Selection.field(name: "filmConnection", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                                                             Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                                                            Selection.field(name: "films", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                                                            Selection.field(name: "films", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                                                                 Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                                                                Selection.field(name: "id", alias: "", arguments: nil, directives: nil, type: .scalar),
-                                                                Selection.field(name: "episodeID", alias: "", arguments: nil, directives: nil, type: .scalar),
-                                                                Selection.field(name: "openingCrawl", alias: "", arguments: nil, directives: nil, type: .scalar)
+                                                                Selection.field(name: "id", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                                                                Selection.field(name: "episodeID", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                                                                Selection.field(name: "openingCrawl", alias: nil, arguments: nil, directives: nil, type: .scalar)
                                                             ]))
                                                         ]))
                                                     ]))
@@ -218,14 +218,14 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                                         ]))
                                     ]))
                                 ])),
-                                Selection.field(name: "vehicleConnection", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                                Selection.field(name: "vehicleConnection", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                                     Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                                    Selection.field(name: "edges", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                                    Selection.field(name: "edges", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                                         Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                                        Selection.field(name: "node", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                                        Selection.field(name: "node", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                                             Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                                            Selection.field(name: "crew", alias: "", arguments: nil, directives: nil, type: .scalar),
-                                            Selection.field(name: "edited", alias: "", arguments: nil, directives: nil, type: .scalar)
+                                            Selection.field(name: "crew", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                                            Selection.field(name: "edited", alias: nil, arguments: nil, directives: nil, type: .scalar)
                                         ]))
                                     ]))
                                 ]))
@@ -729,7 +729,7 @@ public struct TestTopLevelFragmentQuery: AutoGraphQLRequest {
     public var operation: AutoGraphQL.Operation {
         return AutoGraphQL.Operation(type: .query, name: "TestTopLevelFragment", variableDefinitions: nil, directives: nil, selectionSet: [
             Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-            Selection.field(name: "person", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+            Selection.field(name: "person", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                 Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
                 Selection.fragmentSpread(name: "PersonFrag", directives: nil)
             ]))

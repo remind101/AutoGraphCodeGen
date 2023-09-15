@@ -289,13 +289,13 @@ public struct ExampleSpaceXQuery: AutoGraphQLRequest {
     public var operation: AutoGraphQL.Operation {
         return AutoGraphQL.Operation(type: .query, name: "ExampleSpaceX", variableDefinitions: nil, directives: nil, selectionSet: [
             Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-            Selection.field(name: "company", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+            Selection.field(name: "company", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                 Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                Selection.field(name: "ceo", alias: "", arguments: nil, directives: nil, type: .scalar)
+                Selection.field(name: "ceo", alias: nil, arguments: nil, directives: nil, type: .scalar)
             ])),
-            Selection.field(name: "roadster", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+            Selection.field(name: "roadster", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                 Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                Selection.field(name: "apoapsis_au", alias: "", arguments: nil, directives: nil, type: .scalar)
+                Selection.field(name: "apoapsis_au", alias: nil, arguments: nil, directives: nil, type: .scalar)
             ]))
         ])
     }
@@ -375,17 +375,17 @@ public struct ExampleSpaceX2Query: AutoGraphQLRequest {
     public var operation: AutoGraphQL.Operation {
         return AutoGraphQL.Operation(type: .query, name: "ExampleSpaceX2", variableDefinitions: [try! AnyVariableDefinition(name: "limit", typeName: .scalar(.int), defaultValue: nil)], directives: nil, selectionSet: [
             Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-            Selection.field(name: "company", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+            Selection.field(name: "company", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                 Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                Selection.field(name: "ceo", alias: "", arguments: nil, directives: nil, type: .scalar)
+                Selection.field(name: "ceo", alias: nil, arguments: nil, directives: nil, type: .scalar)
             ])),
-            Selection.field(name: "capsules", alias: "", arguments: ["find" : ["id" : 4, "mission" : "cool", "type" : "rocket"] as [String: Any], "limit" : Variable(name: "limit")], directives: nil, type: .object(selectionSet: [
+            Selection.field(name: "capsules", alias: nil, arguments: ["find" : ["id" : 4, "mission" : "cool", "type" : "rocket"] as [String: Any], "limit" : Variable(name: "limit")], directives: nil, type: .object(selectionSet: [
                 Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                Selection.field(name: "id", alias: "", arguments: nil, directives: nil, type: .scalar),
-                Selection.field(name: "missions", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                Selection.field(name: "id", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                Selection.field(name: "missions", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                     Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                    Selection.field(name: "name", alias: "", arguments: nil, directives: nil, type: .scalar),
-                    Selection.field(name: "flight", alias: "", arguments: nil, directives: nil, type: .scalar)
+                    Selection.field(name: "name", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                    Selection.field(name: "flight", alias: nil, arguments: nil, directives: nil, type: .scalar)
                 ]))
             ]))
         ])
@@ -491,14 +491,14 @@ public struct MutationMutation: AutoGraphQLRequest {
     public var operation: AutoGraphQL.Operation {
         return AutoGraphQL.Operation(type: .mutation, name: "Mutation", variableDefinitions: [try! AnyVariableDefinition(name: "where", typeName: .nonNull(.object(typeName: "users_bool_exp")), defaultValue: nil), try! AnyVariableDefinition(name: "set", typeName: .object(typeName: "users_set_input"), defaultValue: nil)], directives: nil, selectionSet: [
             Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-            Selection.field(name: "update_users", alias: "", arguments: ["where" : Variable(name: "where"), "_set" : Variable(name: "set")], directives: nil, type: .object(selectionSet: [
+            Selection.field(name: "update_users", alias: nil, arguments: ["where" : Variable(name: "where"), "_set" : Variable(name: "set")], directives: nil, type: .object(selectionSet: [
                 Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                Selection.field(name: "affected_rows", alias: "", arguments: nil, directives: nil, type: .scalar),
-                Selection.field(name: "returning", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                Selection.field(name: "affected_rows", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                Selection.field(name: "returning", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                     Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                    Selection.field(name: "rocket", alias: "", arguments: nil, directives: nil, type: .scalar),
-                    Selection.field(name: "timestamp", alias: "", arguments: nil, directives: nil, type: .scalar),
-                    Selection.field(name: "twitter", alias: "", arguments: nil, directives: nil, type: .scalar)
+                    Selection.field(name: "rocket", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                    Selection.field(name: "timestamp", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                    Selection.field(name: "twitter", alias: nil, arguments: nil, directives: nil, type: .scalar)
                 ]))
             ]))
         ])
@@ -592,12 +592,12 @@ public struct SubscriptionSubscription: AutoGraphQLRequest {
 
     public var operation: AutoGraphQL.Operation {
         return AutoGraphQL.Operation(type: .subscription, name: "Subscription", variableDefinitions: [try! AnyVariableDefinition(name: "limit", typeName: .scalar(.int), defaultValue: nil), try! AnyVariableDefinition(name: "offset", typeName: .scalar(.int), defaultValue: nil), try! AnyVariableDefinition(name: "distinctOn", typeName: .list(.nonNull(.object(typeName: "users_select_column"))), defaultValue: nil)], directives: nil, selectionSet: [
-            Selection.field(name: "users", alias: "", arguments: ["limit" : Variable(name: "limit"), "offset" : Variable(name: "offset"), "distinct_on" : Variable(name: "distinctOn")], directives: nil, type: .object(selectionSet: [
+            Selection.field(name: "users", alias: nil, arguments: ["limit" : Variable(name: "limit"), "offset" : Variable(name: "offset"), "distinct_on" : Variable(name: "distinctOn")], directives: nil, type: .object(selectionSet: [
                 Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                Selection.field(name: "name", alias: "", arguments: nil, directives: nil, type: .scalar),
-                Selection.field(name: "rocket", alias: "", arguments: nil, directives: nil, type: .scalar),
-                Selection.field(name: "timestamp", alias: "", arguments: nil, directives: nil, type: .scalar),
-                Selection.field(name: "id", alias: "", arguments: nil, directives: nil, type: .scalar)
+                Selection.field(name: "name", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                Selection.field(name: "rocket", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                Selection.field(name: "timestamp", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                Selection.field(name: "id", alias: nil, arguments: nil, directives: nil, type: .scalar)
             ]))
         ])
     }

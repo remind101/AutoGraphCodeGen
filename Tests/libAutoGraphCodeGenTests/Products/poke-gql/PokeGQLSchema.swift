@@ -33,24 +33,25 @@ public struct ExamplePokemonQuery: AutoGraphQLRequest {
     public var operation: AutoGraphQL.Operation {
         return AutoGraphQL.Operation(type: .query, name: "ExamplePokemon", variableDefinitions: [try! AnyVariableDefinition(name: "pokemonV2AbilityByPkId", typeName: .nonNull(.scalar(.int)), defaultValue: nil)], directives: nil, selectionSet: [
             Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-            Selection.field(name: "pokemon_v2_ability_by_pk", alias: "", arguments: ["id" : Variable(name: "pokemonV2AbilityByPkId")], directives: nil, type: .object(selectionSet: [
+            Selection.field(name: "pokemon_v2_ability_by_pk", alias: nil, arguments: ["id" : Variable(name: "pokemonV2AbilityByPkId")], directives: nil, type: .object(selectionSet: [
                 Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                Selection.field(name: "generation_id", alias: "", arguments: nil, directives: nil, type: .scalar),
-                Selection.field(name: "id", alias: "", arguments: nil, directives: nil, type: .scalar),
-                Selection.field(name: "is_main_series", alias: "", arguments: nil, directives: [Directive(name: "skip", arguments: ["if" : false])], type: .scalar),
-                Selection.field(name: "name", alias: "", arguments: nil, directives: nil, type: .scalar),
-                Selection.field(name: "pokemon_v2_abilitychanges", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                Selection.field(name: "generation_id", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                Selection.field(name: "id", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                Selection.field(name: "is_main_series", alias: nil, arguments: nil, directives: [Directive(name: "skip", arguments: ["if" : false])], type: .scalar),
+                Selection.field(name: "name", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                Selection.field(name: "pokemon_v2_abilitychanges", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                     Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                    Selection.field(name: "ability_id", alias: "", arguments: nil, directives: nil, type: .scalar),
-                    Selection.field(name: "pokemon_v2_ability", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                    Selection.field(name: "ability_id", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                    Selection.field(name: "pokemon_v2_ability", alias: nil, arguments: nil, directives: nil, type: .object(selectionSet: [
                         Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                        Selection.field(name: "name", alias: "", arguments: nil, directives: [Directive(name: "specifiedBy", arguments: nil)], type: .scalar),
-                        Selection.field(name: "is_main_series", alias: "", arguments: nil, directives: nil, type: .scalar),
-                        Selection.field(name: "pokemon_v2_abilityflavortexts_aggregate", alias: "", arguments: ["order_by" : Variable(name: "orderBy")], directives: nil, type: .object(selectionSet: [
+                        Selection.field(name: "name", alias: nil, arguments: nil, directives: [Directive(name: "specifiedBy", arguments: nil)], type: .scalar),
+                        Selection.field(name: "name", alias: "other_name", arguments: nil, directives: [Directive(name: "specifiedBy", arguments: nil)], type: .scalar),
+                        Selection.field(name: "is_main_series", alias: nil, arguments: nil, directives: nil, type: .scalar),
+                        Selection.field(name: "pokemon_v2_abilityflavortexts_aggregate", alias: nil, arguments: ["order_by" : Variable(name: "orderBy")], directives: nil, type: .object(selectionSet: [
                             Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                            Selection.field(name: "aggregate", alias: "", arguments: nil, directives: nil, type: .object(selectionSet: [
+                            Selection.field(name: "aggregate", alias: "agg", arguments: nil, directives: nil, type: .object(selectionSet: [
                                 Selection.field(name: "__typename", alias: nil, arguments: nil, directives: nil, type: .scalar),
-                                Selection.field(name: "count", alias: "", arguments: nil, directives: nil, type: .scalar)
+                                Selection.field(name: "count", alias: nil, arguments: nil, directives: nil, type: .scalar)
                             ]))
                         ]))
                     ]))
@@ -120,10 +121,11 @@ public struct ExamplePokemonQuery: AutoGraphQLRequest {
             public private(set) var pokemon_v2_ability: pokemon_v2_ability? = nil
 
             public struct pokemon_v2_ability: Codable {
-                public init(__typename: String = String(), is_main_series: Bool = Bool(), name: String = String(), pokemon_v2_abilityflavortexts_aggregate: pokemon_v2_ability.pokemon_v2_abilityflavortext_aggregate = pokemon_v2_ability.pokemon_v2_abilityflavortext_aggregate()) {
+                public init(__typename: String = String(), is_main_series: Bool = Bool(), name: String = String(), other_name: String = String(), pokemon_v2_abilityflavortexts_aggregate: pokemon_v2_ability.pokemon_v2_abilityflavortext_aggregate = pokemon_v2_ability.pokemon_v2_abilityflavortext_aggregate()) {
                     self.__typename = __typename
                     self.is_main_series = is_main_series
                     self.name = name
+                    self.other_name = other_name
                     self.pokemon_v2_abilityflavortexts_aggregate = pokemon_v2_abilityflavortexts_aggregate
                 }
 
@@ -133,31 +135,33 @@ public struct ExamplePokemonQuery: AutoGraphQLRequest {
                     self.__typename = typename
                     self.is_main_series = try values.decode(Bool.self, forKey: .is_main_series)
                     self.name = try values.decode(String.self, forKey: .name)
+                    self.other_name = try values.decode(String.self, forKey: .other_name)
                     self.pokemon_v2_abilityflavortexts_aggregate = try values.decode(pokemon_v2_ability.pokemon_v2_abilityflavortext_aggregate.self, forKey: .pokemon_v2_abilityflavortexts_aggregate)
                 }
 
                 public private(set) var __typename: String = String()
                 public private(set) var is_main_series: Bool = Bool()
                 public private(set) var name: String = String()
+                public private(set) var other_name: String = String()
 
                 public private(set) var pokemon_v2_abilityflavortexts_aggregate: pokemon_v2_abilityflavortext_aggregate = pokemon_v2_abilityflavortext_aggregate()
 
                 public struct pokemon_v2_abilityflavortext_aggregate: Codable {
-                    public init(__typename: String = String(), aggregate: pokemon_v2_abilityflavortext_aggregate.pokemon_v2_abilityflavortext_aggregate_fields? = nil) {
+                    public init(__typename: String = String(), agg: pokemon_v2_abilityflavortext_aggregate.pokemon_v2_abilityflavortext_aggregate_fields? = nil) {
                         self.__typename = __typename
-                        self.aggregate = aggregate
+                        self.agg = agg
                     }
 
                     public init(from decoder: Decoder) throws {
                         let values = try decoder.container(keyedBy: CodingKeys.self)
                         let typename = try values.decode(String.self, forKey: .__typename)
                         self.__typename = typename
-                        self.aggregate = try values.decode(pokemon_v2_abilityflavortext_aggregate.pokemon_v2_abilityflavortext_aggregate_fields?.self, forKey: .aggregate)
+                        self.agg = try values.decode(pokemon_v2_abilityflavortext_aggregate.pokemon_v2_abilityflavortext_aggregate_fields?.self, forKey: .agg)
                     }
 
                     public private(set) var __typename: String = String()
 
-                    public private(set) var aggregate: pokemon_v2_abilityflavortext_aggregate_fields? = nil
+                    public private(set) var agg: pokemon_v2_abilityflavortext_aggregate_fields? = nil
 
                     public struct pokemon_v2_abilityflavortext_aggregate_fields: Codable {
                         public init(__typename: String = String(), count: Int = Int()) {
