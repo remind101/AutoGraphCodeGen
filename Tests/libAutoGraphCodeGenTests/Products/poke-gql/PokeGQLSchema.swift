@@ -71,7 +71,7 @@ public struct ExamplePokemonQuery: AutoGraphQLRequest {
     }
 
     public struct pokemon_v2_ability: Codable {
-        public init(__typename: String = String(), generation_id: Int? = nil, id: Int = Int(), is_main_series: Bool = Bool(), name: String = String(), pokemon_v2_abilitychanges: [pokemon_v2_ability.pokemon_v2_abilitychange] = []) {
+        public init(__typename: String = "pokemon_v2_ability", generation_id: Int? = nil, id: Int = Int(), is_main_series: Bool = Bool(), name: String = String(), pokemon_v2_abilitychanges: [pokemon_v2_ability.pokemon_v2_abilitychange] = []) {
             self.__typename = __typename
             self.generation_id = generation_id
             self.id = id
@@ -91,7 +91,7 @@ public struct ExamplePokemonQuery: AutoGraphQLRequest {
             self.pokemon_v2_abilitychanges = try values.decode([pokemon_v2_ability.pokemon_v2_abilitychange].self, forKey: .pokemon_v2_abilitychanges)
         }
 
-        public private(set) var __typename: String = String()
+        public private(set) var __typename: String = "pokemon_v2_ability"
         public private(set) var generation_id: Int? = nil
         public private(set) var id: Int = Int()
         public private(set) var is_main_series: Bool = Bool()
@@ -100,7 +100,7 @@ public struct ExamplePokemonQuery: AutoGraphQLRequest {
         public private(set) var pokemon_v2_abilitychanges: [pokemon_v2_abilitychange] = []
 
         public struct pokemon_v2_abilitychange: Codable {
-            public init(__typename: String = String(), ability_id: Int? = nil, pokemon_v2_ability: pokemon_v2_abilitychange.pokemon_v2_ability? = nil) {
+            public init(__typename: String = "pokemon_v2_abilitychange", ability_id: Int? = nil, pokemon_v2_ability: pokemon_v2_abilitychange.pokemon_v2_ability? = nil) {
                 self.__typename = __typename
                 self.ability_id = ability_id
                 self.pokemon_v2_ability = pokemon_v2_ability
@@ -114,13 +114,13 @@ public struct ExamplePokemonQuery: AutoGraphQLRequest {
                 self.pokemon_v2_ability = try values.decode(pokemon_v2_abilitychange.pokemon_v2_ability?.self, forKey: .pokemon_v2_ability)
             }
 
-            public private(set) var __typename: String = String()
+            public private(set) var __typename: String = "pokemon_v2_abilitychange"
             public private(set) var ability_id: Int? = nil
 
             public private(set) var pokemon_v2_ability: pokemon_v2_ability? = nil
 
             public struct pokemon_v2_ability: Codable {
-                public init(__typename: String = String(), is_main_series: Bool = Bool(), name: String = String(), pokemon_v2_abilityflavortexts_aggregate: pokemon_v2_ability.pokemon_v2_abilityflavortext_aggregate = pokemon_v2_ability.pokemon_v2_abilityflavortext_aggregate()) {
+                public init(__typename: String = "pokemon_v2_ability", is_main_series: Bool = Bool(), name: String = String(), pokemon_v2_abilityflavortexts_aggregate: pokemon_v2_ability.pokemon_v2_abilityflavortext_aggregate = pokemon_v2_ability.pokemon_v2_abilityflavortext_aggregate()) {
                     self.__typename = __typename
                     self.is_main_series = is_main_series
                     self.name = name
@@ -136,14 +136,14 @@ public struct ExamplePokemonQuery: AutoGraphQLRequest {
                     self.pokemon_v2_abilityflavortexts_aggregate = try values.decode(pokemon_v2_ability.pokemon_v2_abilityflavortext_aggregate.self, forKey: .pokemon_v2_abilityflavortexts_aggregate)
                 }
 
-                public private(set) var __typename: String = String()
+                public private(set) var __typename: String = "pokemon_v2_ability"
                 public private(set) var is_main_series: Bool = Bool()
                 public private(set) var name: String = String()
 
                 public private(set) var pokemon_v2_abilityflavortexts_aggregate: pokemon_v2_abilityflavortext_aggregate = pokemon_v2_abilityflavortext_aggregate()
 
                 public struct pokemon_v2_abilityflavortext_aggregate: Codable {
-                    public init(__typename: String = String(), aggregate: pokemon_v2_abilityflavortext_aggregate.pokemon_v2_abilityflavortext_aggregate_fields? = nil) {
+                    public init(__typename: String = "pokemon_v2_abilityflavortext_aggregate", aggregate: pokemon_v2_abilityflavortext_aggregate.pokemon_v2_abilityflavortext_aggregate_fields? = nil) {
                         self.__typename = __typename
                         self.aggregate = aggregate
                     }
@@ -155,12 +155,12 @@ public struct ExamplePokemonQuery: AutoGraphQLRequest {
                         self.aggregate = try values.decode(pokemon_v2_abilityflavortext_aggregate.pokemon_v2_abilityflavortext_aggregate_fields?.self, forKey: .aggregate)
                     }
 
-                    public private(set) var __typename: String = String()
+                    public private(set) var __typename: String = "pokemon_v2_abilityflavortext_aggregate"
 
                     public private(set) var aggregate: pokemon_v2_abilityflavortext_aggregate_fields? = nil
 
                     public struct pokemon_v2_abilityflavortext_aggregate_fields: Codable {
-                        public init(__typename: String = String(), count: Int = Int()) {
+                        public init(__typename: String = "pokemon_v2_abilityflavortext_aggregate_fields", count: Int = Int()) {
                             self.__typename = __typename
                             self.count = count
                         }
@@ -172,7 +172,7 @@ public struct ExamplePokemonQuery: AutoGraphQLRequest {
                             self.count = try values.decode(Int.self, forKey: .count)
                         }
 
-                        public private(set) var __typename: String = String()
+                        public private(set) var __typename: String = "pokemon_v2_abilityflavortext_aggregate_fields"
                         public private(set) var count: Int = Int()
                     }
                 }

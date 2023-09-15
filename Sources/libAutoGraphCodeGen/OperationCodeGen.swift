@@ -8,7 +8,7 @@ extension OperationDefinitionIR {
         let nextIndentation = indentation + "    "
         let nextNextIndentation = nextIndentation + "    "
         let initializerAndInputVariableProperties = try self.genInitializerAndInputVariablePropertyDeclarations(indentation: nextIndentation)
-        let scalarPropertyDefinitions = try self.selectionSet.genScalarPropertyVariableDeclarations(indentation: nextNextIndentation, schemaName: outputSchemaName, omit__typename: true)
+        let scalarPropertyDefinitions = try self.selectionSet.genScalarPropertyVariableDeclarations(indentation: nextNextIndentation, schemaName: outputSchemaName, parentFieldBaseTypeName: self.typeName, omit__typename: true)
         let fragmentSpreadPropertyDefinitions = try self.selectionSet.genFragmentSpreadPropertyVariableDeclarations(indentation: nextNextIndentation, schemaName: outputSchemaName)
         let (objectSubStructPropertyDefinitions, objectSubStructDefinitions) =
         try self.selectionSet.genObjectNestedStructDeclarations(indentation: nextIndentation, schemaName: outputSchemaName)

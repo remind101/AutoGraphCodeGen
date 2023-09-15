@@ -312,7 +312,7 @@ public struct ExampleSpaceXQuery: AutoGraphQLRequest {
     }
 
     public struct Info: Codable {
-        public init(__typename: String = String(), ceo: String? = nil) {
+        public init(__typename: String = "Info", ceo: String? = nil) {
             self.__typename = __typename
             self.ceo = ceo
         }
@@ -324,12 +324,12 @@ public struct ExampleSpaceXQuery: AutoGraphQLRequest {
             self.ceo = try values.decode(String?.self, forKey: .ceo)
         }
 
-        public private(set) var __typename: String = String()
+        public private(set) var __typename: String = "Info"
         public private(set) var ceo: String? = nil
     }
 
     public struct Roadster: Codable {
-        public init(__typename: String = String(), apoapsis_au: Double? = nil) {
+        public init(__typename: String = "Roadster", apoapsis_au: Double? = nil) {
             self.__typename = __typename
             self.apoapsis_au = apoapsis_au
         }
@@ -341,7 +341,7 @@ public struct ExampleSpaceXQuery: AutoGraphQLRequest {
             self.apoapsis_au = try values.decode(Double?.self, forKey: .apoapsis_au)
         }
 
-        public private(set) var __typename: String = String()
+        public private(set) var __typename: String = "Roadster"
         public private(set) var apoapsis_au: Double? = nil
     }
 }
@@ -403,7 +403,7 @@ public struct ExampleSpaceX2Query: AutoGraphQLRequest {
     }
 
     public struct Capsule: Codable {
-        public init(__typename: String = String(), id: String? = nil, missions: [Capsule.CapsuleMission?]? = nil) {
+        public init(__typename: String = "Capsule", id: String? = nil, missions: [Capsule.CapsuleMission?]? = nil) {
             self.__typename = __typename
             self.id = id
             self.missions = missions
@@ -417,13 +417,13 @@ public struct ExampleSpaceX2Query: AutoGraphQLRequest {
             self.missions = try values.decode([Capsule.CapsuleMission?]?.self, forKey: .missions)
         }
 
-        public private(set) var __typename: String = String()
+        public private(set) var __typename: String = "Capsule"
         public private(set) var id: String? = nil
 
         public private(set) var missions: [CapsuleMission?]? = nil
 
         public struct CapsuleMission: Codable {
-            public init(__typename: String = String(), flight: Int? = nil, name: String? = nil) {
+            public init(__typename: String = "CapsuleMission", flight: Int? = nil, name: String? = nil) {
                 self.__typename = __typename
                 self.flight = flight
                 self.name = name
@@ -437,14 +437,14 @@ public struct ExampleSpaceX2Query: AutoGraphQLRequest {
                 self.name = try values.decode(String?.self, forKey: .name)
             }
 
-            public private(set) var __typename: String = String()
+            public private(set) var __typename: String = "CapsuleMission"
             public private(set) var flight: Int? = nil
             public private(set) var name: String? = nil
         }
     }
 
     public struct Info: Codable {
-        public init(__typename: String = String(), ceo: String? = nil) {
+        public init(__typename: String = "Info", ceo: String? = nil) {
             self.__typename = __typename
             self.ceo = ceo
         }
@@ -456,7 +456,7 @@ public struct ExampleSpaceX2Query: AutoGraphQLRequest {
             self.ceo = try values.decode(String?.self, forKey: .ceo)
         }
 
-        public private(set) var __typename: String = String()
+        public private(set) var __typename: String = "Info"
         public private(set) var ceo: String? = nil
     }
 }
@@ -516,7 +516,7 @@ public struct MutationMutation: AutoGraphQLRequest {
     }
 
     public struct users_mutation_response: Codable {
-        public init(__typename: String = String(), affected_rows: Int = Int(), returning: [users_mutation_response.users] = []) {
+        public init(__typename: String = "users_mutation_response", affected_rows: Int = Int(), returning: [users_mutation_response.users] = []) {
             self.__typename = __typename
             self.affected_rows = affected_rows
             self.returning = returning
@@ -530,13 +530,13 @@ public struct MutationMutation: AutoGraphQLRequest {
             self.returning = try values.decode([users_mutation_response.users].self, forKey: .returning)
         }
 
-        public private(set) var __typename: String = String()
+        public private(set) var __typename: String = "users_mutation_response"
         public private(set) var affected_rows: Int = Int()
 
         public private(set) var returning: [users] = []
 
         public struct users: Codable {
-            public init(__typename: String = String(), rocket: String? = nil, timestamp: SpaceXGQLSchema.timestamptz = SpaceXGQLSchema.timestamptz(), twitter: String? = nil) {
+            public init(__typename: String = "users", rocket: String? = nil, timestamp: SpaceXGQLSchema.timestamptz = SpaceXGQLSchema.timestamptz(), twitter: String? = nil) {
                 self.__typename = __typename
                 self.rocket = rocket
                 self.timestamp = timestamp
@@ -552,7 +552,7 @@ public struct MutationMutation: AutoGraphQLRequest {
                 self.twitter = try values.decode(String?.self, forKey: .twitter)
             }
 
-            public private(set) var __typename: String = String()
+            public private(set) var __typename: String = "users"
             public private(set) var rocket: String? = nil
             public private(set) var timestamp: SpaceXGQLSchema.timestamptz = SpaceXGQLSchema.timestamptz()
             public private(set) var twitter: String? = nil
@@ -614,7 +614,7 @@ public struct SubscriptionSubscription: AutoGraphQLRequest {
     }
 
     public struct users: Codable {
-        public init(__typename: String = String(), id: SpaceXGQLSchema.uuid = SpaceXGQLSchema.uuid(), name: String? = nil, rocket: String? = nil, timestamp: SpaceXGQLSchema.timestamptz = SpaceXGQLSchema.timestamptz()) {
+        public init(__typename: String = "users", id: SpaceXGQLSchema.uuid = SpaceXGQLSchema.uuid(), name: String? = nil, rocket: String? = nil, timestamp: SpaceXGQLSchema.timestamptz = SpaceXGQLSchema.timestamptz()) {
             self.__typename = __typename
             self.id = id
             self.name = name
@@ -632,7 +632,7 @@ public struct SubscriptionSubscription: AutoGraphQLRequest {
             self.timestamp = try values.decode(SpaceXGQLSchema.timestamptz.self, forKey: .timestamp)
         }
 
-        public private(set) var __typename: String = String()
+        public private(set) var __typename: String = "users"
         public private(set) var id: SpaceXGQLSchema.uuid = SpaceXGQLSchema.uuid()
         public private(set) var name: String? = nil
         public private(set) var rocket: String? = nil

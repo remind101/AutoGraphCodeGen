@@ -60,7 +60,7 @@ public func codeGen(configuration: Configuration) throws {
             
             \(optionalInputValueCode)
             
-            \(variableInputParamterCode)
+            \(variableInputParamterCode)\n
             """
         try code.write(toFile: path, atomically: false, encoding: .utf8)
     }
