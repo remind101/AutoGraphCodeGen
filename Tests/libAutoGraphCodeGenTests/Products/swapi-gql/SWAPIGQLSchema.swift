@@ -21,7 +21,7 @@ public enum SWAPIGQLSchema {
             case pageInfo
         }
 
-        public private(set) var __typename: String = String()
+        public private(set) var __typename: String = "FilmCharactersConnection"
 
         public private(set) var pageInfo: PageInfo = PageInfo()
 
@@ -45,7 +45,7 @@ public enum SWAPIGQLSchema {
         }
 
         public struct PageInfo: Codable {
-            public init(__typename: String = String(), alias1: Bool = Bool(), hasPreviousPage: Bool = Bool()) {
+            public init(__typename: String = "PageInfo", alias1: Bool = Bool(), hasPreviousPage: Bool = Bool()) {
                 self.__typename = __typename
                 self.alias1 = alias1
                 self.hasPreviousPage = hasPreviousPage
@@ -59,7 +59,7 @@ public enum SWAPIGQLSchema {
                 self.hasPreviousPage = try values.decode(Bool.self, forKey: .hasPreviousPage)
             }
 
-            public private(set) var __typename: String = String()
+            public private(set) var __typename: String = "PageInfo"
             public private(set) var alias1: Bool = Bool()
             public private(set) var hasPreviousPage: Bool = Bool()
         }
@@ -86,7 +86,7 @@ public enum SWAPIGQLSchema {
             case id
         }
 
-        public private(set) var __typename: String = String()
+        public private(set) var __typename: String = "Person"
         public private(set) var birthYear: String? = nil
         public private(set) var id: String = String()
 
@@ -258,7 +258,7 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
     }
 
     public struct FilmsConnection: Codable {
-        public init(__typename: String = String(), edges: [FilmsConnection.FilmsEdge?]? = nil) {
+        public init(__typename: String = "FilmsConnection", edges: [FilmsConnection.FilmsEdge?]? = nil) {
             self.__typename = __typename
             self.edges = edges
         }
@@ -270,12 +270,12 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
             self.edges = try values.decode([FilmsConnection.FilmsEdge?]?.self, forKey: .edges)
         }
 
-        public private(set) var __typename: String = String()
+        public private(set) var __typename: String = "FilmsConnection"
 
         public private(set) var edges: [FilmsEdge?]? = nil
 
         public struct FilmsEdge: Codable {
-            public init(__typename: String = String(), node: FilmsEdge.Film? = nil) {
+            public init(__typename: String = "FilmsEdge", node: FilmsEdge.Film? = nil) {
                 self.__typename = __typename
                 self.node = node
             }
@@ -287,12 +287,12 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                 self.node = try values.decode(FilmsEdge.Film?.self, forKey: .node)
             }
 
-            public private(set) var __typename: String = String()
+            public private(set) var __typename: String = "FilmsEdge"
 
             public private(set) var node: Film? = nil
 
             public struct Film: Codable {
-                public init(__typename: String = String(), characterConnection: Film.FilmCharactersConnection? = nil, asFilm: AsFilm? = nil) {
+                public init(__typename: String = "Film", characterConnection: Film.FilmCharactersConnection? = nil, asFilm: AsFilm? = nil) {
                     self.__typename = __typename
                     self.characterConnection = characterConnection
                     self.asFilm = asFilm
@@ -306,14 +306,14 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                     self.asFilm = typename == "Film" ? try AsFilm(from: decoder) : nil
                 }
 
-                public private(set) var __typename: String = String()
+                public private(set) var __typename: String = "Film"
 
                 public private(set) var characterConnection: FilmCharactersConnection? = nil
 
                 public private(set) var asFilm: AsFilm? = nil
 
                 public struct FilmCharactersConnection: Codable {
-                    public init(__typename: String = String(), characters: [FilmCharactersConnection.Person?]? = nil, pageInfo: FilmCharactersConnection.PageInfo = FilmCharactersConnection.PageInfo(), characterConnFrag: SWAPIGQLSchema.CharacterConnFrag = SWAPIGQLSchema.CharacterConnFrag()) {
+                    public init(__typename: String = "FilmCharactersConnection", characters: [FilmCharactersConnection.Person?]? = nil, pageInfo: FilmCharactersConnection.PageInfo = FilmCharactersConnection.PageInfo(), characterConnFrag: SWAPIGQLSchema.CharacterConnFrag = SWAPIGQLSchema.CharacterConnFrag()) {
                         self.__typename = __typename
                         self.characters = characters
                         self.pageInfo = pageInfo
@@ -329,7 +329,7 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                         self.characterConnFrag = try SWAPIGQLSchema.CharacterConnFrag(from: decoder)
                     }
 
-                    public private(set) var __typename: String = String()
+                    public private(set) var __typename: String = "FilmCharactersConnection"
 
                     public private(set) var characters: [Person?]? = nil
                     public private(set) var pageInfo: PageInfo = PageInfo()
@@ -337,7 +337,7 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                     public private(set) var characterConnFrag: SWAPIGQLSchema.CharacterConnFrag = SWAPIGQLSchema.CharacterConnFrag()
 
                     public struct Person: Codable {
-                        public init(__typename: String = String(), birthYear: String? = nil, created: String? = nil, edited: String? = nil, eyeColor: String? = nil, homeworld: Person.Planet? = nil, vehicleConnection: Person.PersonVehiclesConnection? = nil) {
+                        public init(__typename: String = "Person", birthYear: String? = nil, created: String? = nil, edited: String? = nil, eyeColor: String? = nil, homeworld: Person.Planet? = nil, vehicleConnection: Person.PersonVehiclesConnection? = nil) {
                             self.__typename = __typename
                             self.birthYear = birthYear
                             self.created = created
@@ -359,7 +359,7 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                             self.vehicleConnection = try values.decode(Person.PersonVehiclesConnection?.self, forKey: .vehicleConnection)
                         }
 
-                        public private(set) var __typename: String = String()
+                        public private(set) var __typename: String = "Person"
                         public private(set) var birthYear: String? = nil
                         public private(set) var created: String? = nil
                         public private(set) var edited: String? = nil
@@ -369,7 +369,7 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                         public private(set) var vehicleConnection: PersonVehiclesConnection? = nil
 
                         public struct Planet: Codable {
-                            public init(__typename: String = String(), climates: [String?]? = nil, filmConnection: Planet.PlanetFilmsConnection? = nil) {
+                            public init(__typename: String = "Planet", climates: [String?]? = nil, filmConnection: Planet.PlanetFilmsConnection? = nil) {
                                 self.__typename = __typename
                                 self.climates = climates
                                 self.filmConnection = filmConnection
@@ -383,13 +383,13 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                                 self.filmConnection = try values.decode(Planet.PlanetFilmsConnection?.self, forKey: .filmConnection)
                             }
 
-                            public private(set) var __typename: String = String()
+                            public private(set) var __typename: String = "Planet"
                             public private(set) var climates: [String?]? = nil
 
                             public private(set) var filmConnection: PlanetFilmsConnection? = nil
 
                             public struct PlanetFilmsConnection: Codable {
-                                public init(__typename: String = String(), edges: [PlanetFilmsConnection.PlanetFilmsEdge?]? = nil) {
+                                public init(__typename: String = "PlanetFilmsConnection", edges: [PlanetFilmsConnection.PlanetFilmsEdge?]? = nil) {
                                     self.__typename = __typename
                                     self.edges = edges
                                 }
@@ -401,12 +401,12 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                                     self.edges = try values.decode([PlanetFilmsConnection.PlanetFilmsEdge?]?.self, forKey: .edges)
                                 }
 
-                                public private(set) var __typename: String = String()
+                                public private(set) var __typename: String = "PlanetFilmsConnection"
 
                                 public private(set) var edges: [PlanetFilmsEdge?]? = nil
 
                                 public struct PlanetFilmsEdge: Codable {
-                                    public init(__typename: String = String(), node: PlanetFilmsEdge.Film? = nil) {
+                                    public init(__typename: String = "PlanetFilmsEdge", node: PlanetFilmsEdge.Film? = nil) {
                                         self.__typename = __typename
                                         self.node = node
                                     }
@@ -418,12 +418,12 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                                         self.node = try values.decode(PlanetFilmsEdge.Film?.self, forKey: .node)
                                     }
 
-                                    public private(set) var __typename: String = String()
+                                    public private(set) var __typename: String = "PlanetFilmsEdge"
 
                                     public private(set) var node: Film? = nil
 
                                     public struct Film: Codable {
-                                        public init(__typename: String = String(), characterConnection: Film.FilmCharactersConnection? = nil) {
+                                        public init(__typename: String = "Film", characterConnection: Film.FilmCharactersConnection? = nil) {
                                             self.__typename = __typename
                                             self.characterConnection = characterConnection
                                         }
@@ -435,12 +435,12 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                                             self.characterConnection = try values.decode(Film.FilmCharactersConnection?.self, forKey: .characterConnection)
                                         }
 
-                                        public private(set) var __typename: String = String()
+                                        public private(set) var __typename: String = "Film"
 
                                         public private(set) var characterConnection: FilmCharactersConnection? = nil
 
                                         public struct FilmCharactersConnection: Codable {
-                                            public init(__typename: String = String(), characters: [FilmCharactersConnection.Person?]? = nil) {
+                                            public init(__typename: String = "FilmCharactersConnection", characters: [FilmCharactersConnection.Person?]? = nil) {
                                                 self.__typename = __typename
                                                 self.characters = characters
                                             }
@@ -452,12 +452,12 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                                                 self.characters = try values.decode([FilmCharactersConnection.Person?]?.self, forKey: .characters)
                                             }
 
-                                            public private(set) var __typename: String = String()
+                                            public private(set) var __typename: String = "FilmCharactersConnection"
 
                                             public private(set) var characters: [Person?]? = nil
 
                                             public struct Person: Codable {
-                                                public init(__typename: String = String(), filmConnection: Person.PersonFilmsConnection? = nil) {
+                                                public init(__typename: String = "Person", filmConnection: Person.PersonFilmsConnection? = nil) {
                                                     self.__typename = __typename
                                                     self.filmConnection = filmConnection
                                                 }
@@ -469,12 +469,12 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                                                     self.filmConnection = try values.decode(Person.PersonFilmsConnection?.self, forKey: .filmConnection)
                                                 }
 
-                                                public private(set) var __typename: String = String()
+                                                public private(set) var __typename: String = "Person"
 
                                                 public private(set) var filmConnection: PersonFilmsConnection? = nil
 
                                                 public struct PersonFilmsConnection: Codable {
-                                                    public init(__typename: String = String(), films: [PersonFilmsConnection.Film?]? = nil) {
+                                                    public init(__typename: String = "PersonFilmsConnection", films: [PersonFilmsConnection.Film?]? = nil) {
                                                         self.__typename = __typename
                                                         self.films = films
                                                     }
@@ -486,12 +486,12 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                                                         self.films = try values.decode([PersonFilmsConnection.Film?]?.self, forKey: .films)
                                                     }
 
-                                                    public private(set) var __typename: String = String()
+                                                    public private(set) var __typename: String = "PersonFilmsConnection"
 
                                                     public private(set) var films: [Film?]? = nil
 
                                                     public struct Film: Codable {
-                                                        public init(__typename: String = String(), episodeID: Int? = nil, id: String = String(), openingCrawl: String? = nil) {
+                                                        public init(__typename: String = "Film", episodeID: Int? = nil, id: String = String(), openingCrawl: String? = nil) {
                                                             self.__typename = __typename
                                                             self.episodeID = episodeID
                                                             self.id = id
@@ -507,7 +507,7 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                                                             self.openingCrawl = try values.decode(String?.self, forKey: .openingCrawl)
                                                         }
 
-                                                        public private(set) var __typename: String = String()
+                                                        public private(set) var __typename: String = "Film"
                                                         public private(set) var episodeID: Int? = nil
                                                         public private(set) var id: String = String()
                                                         public private(set) var openingCrawl: String? = nil
@@ -521,7 +521,7 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                         }
 
                         public struct PersonVehiclesConnection: Codable {
-                            public init(__typename: String = String(), edges: [PersonVehiclesConnection.PersonVehiclesEdge?]? = nil) {
+                            public init(__typename: String = "PersonVehiclesConnection", edges: [PersonVehiclesConnection.PersonVehiclesEdge?]? = nil) {
                                 self.__typename = __typename
                                 self.edges = edges
                             }
@@ -533,12 +533,12 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                                 self.edges = try values.decode([PersonVehiclesConnection.PersonVehiclesEdge?]?.self, forKey: .edges)
                             }
 
-                            public private(set) var __typename: String = String()
+                            public private(set) var __typename: String = "PersonVehiclesConnection"
 
                             public private(set) var edges: [PersonVehiclesEdge?]? = nil
 
                             public struct PersonVehiclesEdge: Codable {
-                                public init(__typename: String = String(), node: PersonVehiclesEdge.Vehicle? = nil) {
+                                public init(__typename: String = "PersonVehiclesEdge", node: PersonVehiclesEdge.Vehicle? = nil) {
                                     self.__typename = __typename
                                     self.node = node
                                 }
@@ -550,12 +550,12 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                                     self.node = try values.decode(PersonVehiclesEdge.Vehicle?.self, forKey: .node)
                                 }
 
-                                public private(set) var __typename: String = String()
+                                public private(set) var __typename: String = "PersonVehiclesEdge"
 
                                 public private(set) var node: Vehicle? = nil
 
                                 public struct Vehicle: Codable {
-                                    public init(__typename: String = String(), crew: String? = nil, edited: String? = nil) {
+                                    public init(__typename: String = "Vehicle", crew: String? = nil, edited: String? = nil) {
                                         self.__typename = __typename
                                         self.crew = crew
                                         self.edited = edited
@@ -569,7 +569,7 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                                         self.edited = try values.decode(String?.self, forKey: .edited)
                                     }
 
-                                    public private(set) var __typename: String = String()
+                                    public private(set) var __typename: String = "Vehicle"
                                     public private(set) var crew: String? = nil
                                     public private(set) var edited: String? = nil
                                 }
@@ -578,7 +578,7 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                     }
 
                     public struct PageInfo: Codable {
-                        public init(__typename: String = String(), endCursor: String? = nil, hasNextPage: Bool = Bool(), hasPreviousPage: Bool = Bool(), startCursor: String? = nil) {
+                        public init(__typename: String = "PageInfo", endCursor: String? = nil, hasNextPage: Bool = Bool(), hasPreviousPage: Bool = Bool(), startCursor: String? = nil) {
                             self.__typename = __typename
                             self.endCursor = endCursor
                             self.hasNextPage = hasNextPage
@@ -596,7 +596,7 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                             self.startCursor = try values.decode(String?.self, forKey: .startCursor)
                         }
 
-                        public private(set) var __typename: String = String()
+                        public private(set) var __typename: String = "PageInfo"
                         public private(set) var endCursor: String? = nil
                         public private(set) var hasNextPage: Bool = Bool()
                         public private(set) var hasPreviousPage: Bool = Bool()
@@ -605,7 +605,7 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                 }
 
                 public struct AsFilm: Codable {
-                    public init(__typename: String = String(), episodeID: Int? = nil) {
+                    public init(__typename: String = "AsFilm", episodeID: Int? = nil) {
                         self.__typename = __typename
                         self.episodeID = episodeID
                     }
@@ -617,7 +617,7 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                         self.episodeID = try values.decode(Int?.self, forKey: .episodeID)
                     }
 
-                    public private(set) var __typename: String = String()
+                    public private(set) var __typename: String = "AsFilm"
                     public private(set) var episodeID: Int? = nil
                 }
             }
@@ -625,7 +625,7 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
     }
 
     public struct Node: Codable {
-        public init(__typename: String = String(), id: String = String(), asFilm: AsFilm? = nil, asPerson: AsPerson? = nil) {
+        public init(__typename: String = "Node", id: String = String(), asFilm: AsFilm? = nil, asPerson: AsPerson? = nil) {
             self.__typename = __typename
             self.id = id
             self.asFilm = asFilm
@@ -641,14 +641,14 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
             self.asPerson = typename == "Person" ? try AsPerson(from: decoder) : nil
         }
 
-        public private(set) var __typename: String = String()
+        public private(set) var __typename: String = "Node"
         public private(set) var id: String = String()
 
         public private(set) var asFilm: AsFilm? = nil
         public private(set) var asPerson: AsPerson? = nil
 
         public struct AsFilm: Codable {
-            public init(__typename: String = String(), director: String? = nil, id: String = String(), planetConnection: AsFilm.FilmPlanetsConnection? = nil) {
+            public init(__typename: String = "AsFilm", director: String? = nil, id: String = String(), planetConnection: AsFilm.FilmPlanetsConnection? = nil) {
                 self.__typename = __typename
                 self.director = director
                 self.id = id
@@ -664,14 +664,14 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                 self.planetConnection = try values.decode(AsFilm.FilmPlanetsConnection?.self, forKey: .planetConnection)
             }
 
-            public private(set) var __typename: String = String()
+            public private(set) var __typename: String = "AsFilm"
             public private(set) var director: String? = nil
             public private(set) var id: String = String()
 
             public private(set) var planetConnection: FilmPlanetsConnection? = nil
 
             public struct FilmPlanetsConnection: Codable {
-                public init(__typename: String = String(), totalCount: Int? = nil) {
+                public init(__typename: String = "FilmPlanetsConnection", totalCount: Int? = nil) {
                     self.__typename = __typename
                     self.totalCount = totalCount
                 }
@@ -683,13 +683,13 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                     self.totalCount = try values.decode(Int?.self, forKey: .totalCount)
                 }
 
-                public private(set) var __typename: String = String()
+                public private(set) var __typename: String = "FilmPlanetsConnection"
                 public private(set) var totalCount: Int? = nil
             }
         }
 
         public struct AsPerson: Codable {
-            public init(__typename: String = String(), birthYear: String? = nil, hairColor: String? = nil) {
+            public init(__typename: String = "AsPerson", birthYear: String? = nil, hairColor: String? = nil) {
                 self.__typename = __typename
                 self.birthYear = birthYear
                 self.hairColor = hairColor
@@ -703,7 +703,7 @@ public struct ExampleStarWarsQuery: AutoGraphQLRequest {
                 self.hairColor = try values.decode(String?.self, forKey: .hairColor)
             }
 
-            public private(set) var __typename: String = String()
+            public private(set) var __typename: String = "AsPerson"
             public private(set) var birthYear: String? = nil
             public private(set) var hairColor: String? = nil
         }
@@ -757,7 +757,7 @@ public struct TestTopLevelFragmentQuery: AutoGraphQLRequest {
     }
 
     public struct Person: Codable {
-        public init(__typename: String = String(), personFrag: SWAPIGQLSchema.PersonFrag = SWAPIGQLSchema.PersonFrag()) {
+        public init(__typename: String = "Person", personFrag: SWAPIGQLSchema.PersonFrag = SWAPIGQLSchema.PersonFrag()) {
             self.__typename = __typename
             self.personFrag = personFrag
         }
@@ -769,7 +769,7 @@ public struct TestTopLevelFragmentQuery: AutoGraphQLRequest {
             self.personFrag = try SWAPIGQLSchema.PersonFrag(from: decoder)
         }
 
-        public private(set) var __typename: String = String()
+        public private(set) var __typename: String = "Person"
 
         public private(set) var personFrag: SWAPIGQLSchema.PersonFrag = SWAPIGQLSchema.PersonFrag()
     }

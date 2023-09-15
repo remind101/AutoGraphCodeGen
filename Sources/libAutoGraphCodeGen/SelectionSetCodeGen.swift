@@ -66,7 +66,13 @@ extension SelectionSetIR {
         // MARK: - __typename-injection:
         let orderedScalarFields = self.scalarFields.ordered(omitting__typename: omit__typename)
         let scalarParameters = orderedScalarFields.map {
-            genFunctionParameter(name: $0.swiftVariableIdentifierName, type: $0.swiftVariableTypeIdentifier(schemaName: schemaName))
+            let name = $0.swiftVariableIdentifierName
+            if name == "__typename", let typename = parentFieldBaseTypeName {
+                return "\(name): String = \"\(typename)\""
+            }
+            else {
+                return genFunctionParameter(name: name, type: $0.swiftVariableTypeIdentifier(schemaName: schemaName))
+            }
         }
                 
         let orderedObjectFields = self.objectFields.ordered()
@@ -180,10 +186,15 @@ extension SelectionSetIR {
         return everything.joined(separator: "\n")
     }
     
-    public func genScalarPropertyVariableDeclarations(indentation: String, schemaName: String, omit__typename: Bool = false) throws -> String {
+    public func genScalarPropertyVariableDeclarations(indentation: String, schemaName: String, parentFieldBaseTypeName: String, omit__typename: Bool = false) throws -> String {
         // MARK: - __typename-injection:
         let orderedScalarFields = self.scalarFields.ordered(omitting__typename: omit__typename)
-        let fields = try orderedScalarFields.map { try $0.genVariableDeclaration(indentation: indentation, schemaName: schemaName) }
+        let fields = try orderedScalarFields.map {
+            if $0.swiftVariableIdentifierName == "__typename" {
+                return "\(indentation)public private(set) var \($0.swiftVariableIdentifierName): String = \"\(parentFieldBaseTypeName)\""
+            }
+            return try $0.genVariableDeclaration(indentation: indentation, schemaName: schemaName)
+        }
         return fields.joined(separator: "\n")
     }
     
@@ -251,7 +262,7 @@ extension SelectionSetIR {
         let typeDefinition = "\(indentation)public struct \(baseTypeName): Codable {"
         let nextIndentation = indentation + "    "
         let initializer = try self.genInitializerDeclaration(indentation: nextIndentation, schemaName: schemaName, parentFieldBaseTypeName: baseTypeName)
-        let innerCode = try self.genPropertyAndNestedStructDeclarations(indentation: nextIndentation, schemaName: schemaName)
+        let innerCode = try self.genPropertyAndNestedStructDeclarations(indentation: nextIndentation, schemaName: schemaName, parentFieldBaseTypeName: baseTypeName)
         return """
         \(typeDefinition)
         \(initializer)
@@ -278,8 +289,8 @@ extension SelectionSetIR {
         """
     }
     
-    public func genPropertyAndNestedStructDeclarations(indentation: String, schemaName: String) throws -> String {
-        let scalarPropertyVariableDeclarations = try self.genScalarPropertyVariableDeclarations(indentation: indentation, schemaName: schemaName)
+    public func genPropertyAndNestedStructDeclarations(indentation: String, schemaName: String, parentFieldBaseTypeName: String) throws -> String {
+        let scalarPropertyVariableDeclarations = try self.genScalarPropertyVariableDeclarations(indentation: indentation, schemaName: schemaName, parentFieldBaseTypeName: parentFieldBaseTypeName)
         let fragmentSpreadPropertyDefinitions = try self.genFragmentSpreadPropertyVariableDeclarations(indentation: indentation, schemaName: schemaName)
         let (objectSubStructPropertyDefinitions, objectSubStructDefinitions) =
         try self.genObjectNestedStructDeclarations(indentation: indentation, schemaName: schemaName)

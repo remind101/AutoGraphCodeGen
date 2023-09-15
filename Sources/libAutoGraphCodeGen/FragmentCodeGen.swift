@@ -26,7 +26,7 @@ extension FragmentDefinitionIR {
         let nextIndentation = indentation + "    "
         let typeDefinition = self.structDeclarationStart(indentation: indentation)
         let initializer = try self.initializer(indentation: nextIndentation, outputSchemaName: outputSchemaName)
-        let scalarPropertyDefinitions = try self.selectionSet.genScalarPropertyVariableDeclarations(indentation: nextIndentation, schemaName: outputSchemaName)
+        let scalarPropertyDefinitions = try self.selectionSet.genScalarPropertyVariableDeclarations(indentation: nextIndentation, schemaName: outputSchemaName, parentFieldBaseTypeName: self.selectionSet.typeInformation.graphQLTypeName.value)
         let fragmentSpreadPropertyDefinitions = try self.selectionSet.genFragmentSpreadPropertyVariableDeclarations(indentation: nextIndentation, schemaName: outputSchemaName)
         let (objectSubStructPropertyDefinitions, objectSubStructDefinitions) =
         try self.selectionSet.genObjectNestedStructDeclarations(indentation: nextIndentation, schemaName: outputSchemaName)

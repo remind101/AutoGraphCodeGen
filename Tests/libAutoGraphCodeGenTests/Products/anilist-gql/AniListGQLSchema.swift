@@ -100,7 +100,7 @@ public struct ExampleAniListWithEnumFieldQuery: AutoGraphQLRequest {
     }
 
     public struct Page: Codable {
-        public init(__typename: String = String(), media: [Page.Media?]? = nil) {
+        public init(__typename: String = "Page", media: [Page.Media?]? = nil) {
             self.__typename = __typename
             self.media = media
         }
@@ -112,12 +112,12 @@ public struct ExampleAniListWithEnumFieldQuery: AutoGraphQLRequest {
             self.media = try values.decode([Page.Media?]?.self, forKey: .media)
         }
 
-        public private(set) var __typename: String = String()
+        public private(set) var __typename: String = "Page"
 
         public private(set) var media: [Media?]? = nil
 
         public struct Media: Codable {
-            public init(__typename: String = String(), description: String? = nil, siteUrl: String? = nil, type: AniListGQLSchema.MediaType? = nil, title: Media.MediaTitle? = nil) {
+            public init(__typename: String = "Media", description: String? = nil, siteUrl: String? = nil, type: AniListGQLSchema.MediaType? = nil, title: Media.MediaTitle? = nil) {
                 self.__typename = __typename
                 self.description = description
                 self.siteUrl = siteUrl
@@ -135,7 +135,7 @@ public struct ExampleAniListWithEnumFieldQuery: AutoGraphQLRequest {
                 self.title = try values.decode(Media.MediaTitle?.self, forKey: .title)
             }
 
-            public private(set) var __typename: String = String()
+            public private(set) var __typename: String = "Media"
             public private(set) var description: String? = nil
             public private(set) var siteUrl: String? = nil
             public private(set) var type: AniListGQLSchema.MediaType? = nil
@@ -143,7 +143,7 @@ public struct ExampleAniListWithEnumFieldQuery: AutoGraphQLRequest {
             public private(set) var title: MediaTitle? = nil
 
             public struct MediaTitle: Codable {
-                public init(__typename: String = String(), english: String? = nil, native: String? = nil) {
+                public init(__typename: String = "MediaTitle", english: String? = nil, native: String? = nil) {
                     self.__typename = __typename
                     self.english = english
                     self.native = native
@@ -157,7 +157,7 @@ public struct ExampleAniListWithEnumFieldQuery: AutoGraphQLRequest {
                     self.native = try values.decode(String?.self, forKey: .native)
                 }
 
-                public private(set) var __typename: String = String()
+                public private(set) var __typename: String = "MediaTitle"
                 public private(set) var english: String? = nil
                 public private(set) var native: String? = nil
             }
