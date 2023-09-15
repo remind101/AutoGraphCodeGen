@@ -174,7 +174,12 @@ extension Field {
     
     public func generateObjectQueryComponent(indentation: String) -> (queryComponent: String, requiredFragments: Set<FragmentName>) {
         let name = self.name.generateQueryComponent()
-        let alias = self.alias.generateQueryComponent()
+        let alias = {
+            // TODO: Possibly better solution is to not use a typealias, make Alias
+            // `Alias` is a typealias for `Name`, but `Alias?` as different semantics than `Name?`.
+            guard let alias = self.alias else { return "nil" }
+            return alias.generateQueryComponent()
+        }()
         let arguments = self.arguments.generateQueryComponent()
         let directives = self.directives.generateQueryComponent()
         let selectionSet = self.selectionSet!.generateQueryComponent(indentation: indentation)
@@ -183,7 +188,12 @@ extension Field {
     
     public func generateScalarQueryComponent() -> String {
         let name = self.name.generateQueryComponent()
-        let alias = self.alias.generateQueryComponent()
+        let alias = {
+            // TODO: Possibly better solution is to not use a typealias, make Alias
+            // `Alias` is a typealias for `Name`, but `Alias?` as different semantics than `Name?`.
+            guard let alias = self.alias else { return "nil" }
+            return alias.generateQueryComponent()
+        }()
         let arguments = self.arguments.generateQueryComponent()
         let directives = self.directives.generateQueryComponent()
         return Field.generateScalarQueryComponent(name: name, alias: alias, arguments: arguments, directives: directives)
