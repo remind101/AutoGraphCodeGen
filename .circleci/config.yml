@@ -1,0 +1,18 @@
+version: 2.1
+
+jobs:
+  test-mac:
+    # See: https://circleci.com/docs/configuration-reference/#macos-execution-environment
+    # See: https://circleci.com/docs/using-macos/#supported-xcode-versions
+    macos:
+      xcode: 14.3.1
+    resource_class: macos.m1.medium.gen1
+    steps:
+      - checkout
+      # Build twice, once to gen, second to compile gen'd.
+      - run: swift test && swift test
+
+workflows:
+  verify:
+    jobs:
+      - test-mac
