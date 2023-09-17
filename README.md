@@ -1,5 +1,7 @@
 # AutoGraphCodeGen
-Swift GraphQL Code Generator
+[![CircleCI](https://circleci.com/gh/remind101/AutoGraphCodeGen.svg?style=shield)](https://app.circleci.com/pipelines/github/remind101/AutoGraphCodeGen)
+
+The Swiftest way to GraphQL Codegen
 
 ### Introspection
 
