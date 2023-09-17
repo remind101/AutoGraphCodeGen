@@ -48,7 +48,7 @@ public func codeGen(configuration: Configuration) throws {
         print("writing optional input type to \(path)")
         let optionalInputValueCode = OptionalInputValueGenerator.typeDeclaration
         print("writing variable definition protocol requirements to \(path)")
-        let variableInputParamterCode = VariableInputParameterEncodableGenerator.code
+        let variableInputParameterCode = VariableInputParameterEncodableGenerator.code
         
         let code =
             """
@@ -60,7 +60,8 @@ public func codeGen(configuration: Configuration) throws {
             
             \(optionalInputValueCode)
             
-            \(variableInputParamterCode)
+            \(variableInputParameterCode)
+            
             """
         try code.write(toFile: path, atomically: false, encoding: .utf8)
     }
