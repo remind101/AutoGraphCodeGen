@@ -1,4 +1,4 @@
-// swift-tools-version: 5.8
+// swift-tools-version: 5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -15,8 +15,8 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/remind101/AutoGraph", from: "0.15.1"),
-        .package(url: "https://github.com/remind101/AutoGraphParser", from: "0.0.2"),
-        .package(url: "https://github.com/apple/swift-syntax", exact: "508.0.0"),
+        .package(url: "https://github.com/remind101/AutoGraphParser", from: "0.0.3"),
+        .package(url: "https://github.com/apple/swift-syntax", exact: "509.0.0"),
     ],
     targets: [
         .executableTarget(name: "AutoGraphCodeGen", dependencies: ["libAutoGraphCodeGen"]),

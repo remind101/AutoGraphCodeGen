@@ -5,7 +5,7 @@ jobs:
     # See: https://circleci.com/docs/configuration-reference/#macos-execution-environment
     # See: https://circleci.com/docs/using-macos/#supported-xcode-versions
     macos:
-      xcode: 14.3.1
+      xcode: 15.0.0
     resource_class: macos.m1.medium.gen1
     steps:
       - checkout

@@ -31,13 +31,12 @@ public func getConfiguration(_ path: String? = nil) throws -> Configuration {
 
 public func codeGen(configuration: Configuration) throws {
     // TODO: Need to throw when `outputProductsPath` and `requestsOutputPath` include one
-    // or the other otherwise they'll delete eachother on cleanup. "Shared" is just a bit
-    // of a hack to reduce that chance. Probably should rename `outputProductsPath` to
-    // `sharedOutputProductsPath` while we're at it.
+    // or the other otherwise they'll delete eachother on cleanup. "/Shared" is a bit
+    // of a hack to reduce that chance.
     
     // TODO: When swift 5.9 releases, add configuration to allow namespacing shared stuff
     // under the schema namespace if desired. Requires `https://github.com/apple/swift-evolution/blob/main/proposals/0404-nested-protocols.md`
-    let sharedOutputProductsPath = configuration.outputProductsPath + "/Shared"
+    let sharedOutputProductsPath = configuration.sharedOutputsPath + "/Shared"
     func writeProtocolDeclarations() throws {
         let fileName = "GraphQLSchemaRequest.swift"
         let path = sharedOutputProductsPath + "/" + fileName
