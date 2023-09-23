@@ -1,5 +1,5 @@
 {
-    "outputProductsPath": "../libAutoGraphCodeGenTests/Products",
+    "sharedOutputsPath": "../libAutoGraphCodeGenTests/Products",
     "schemas": [
         {
             "schemaPath": "poke-gql/poke-gql.json",

@@ -119,6 +119,10 @@ extension `Type` {
     func reWrapToSwiftType(_ allTypes: AllTypes) -> SwiftType {
         switch self {
         case .namedType(let namedType):
+            // This actually never returns `nil` because defaults to custom types
+            // so check it explicitly.
+            let possibleScalar = ScalarType.NameType(rawValue: namedType.name.value)
+            
             // Either it's a scalar...
             if let builtinScalar = ScalarType.NameType.BuiltIn(rawValue: namedType.name.value) {
                 let swiftScalar = SwiftScalarType(nameType: ScalarType.NameType(builtIn: builtinScalar))
@@ -127,12 +131,7 @@ extension `Type` {
                 return SwiftType(base: base, reWrapped: reWrapped, prefixedReWrapped: nil)
             }
             // or a custom scalar, which must be schema prefixed...
-            else if
-                // This actually never returns `nil` because defaults to custom types
-                // so check it explicitly.
-                let possibleScalar = ScalarType.NameType(rawValue: namedType.name.value),
-                allTypes.customScalarTypes[possibleScalar] != nil
-            {
+            else if allTypes.customScalarTypes[possibleScalar] != nil {
                 let swiftScalar = SwiftScalarType(nameType: possibleScalar)
                 let base = swiftScalar.swiftVariableTypeIdentifier
                 let reWrapped = ReWrappedSwiftType.nullable(.val(base))
@@ -183,18 +182,16 @@ extension OfType {
         case .scalar(let typeRef):
             precondition(typeRef.kind == .scalar, "never fails")
             let name = typeRef.name!
+            // This actually never returns `nil` because defaults to custom types
+            // so check it explicitly.
+            let possibleScalar = ScalarType.NameType(rawValue: name)
             if let builtinScalar = ScalarType.NameType.BuiltIn(rawValue: name) {
                 let swiftScalar = SwiftScalarType(nameType: ScalarType.NameType(builtIn: builtinScalar))
                 let base = swiftScalar.swiftVariableTypeIdentifier
                 let reWrapped = ReWrappedSwiftType.nullable(.val(base))
                 return SwiftType(base: base, reWrapped: reWrapped, prefixedReWrapped: nil)
             }
-            else if
-                // This actually never returns `nil` because defaults to custom types
-                // so check it explicitly.
-                let possibleScalar = ScalarType.NameType(rawValue: name),
-                allTypes.customScalarTypes[possibleScalar] != nil
-            {
+            else if allTypes.customScalarTypes[possibleScalar] != nil {
                 let swiftScalar = SwiftScalarType(nameType: possibleScalar)
                 let base = swiftScalar.swiftVariableTypeIdentifier
                 let reWrapped = ReWrappedSwiftType.nullable(.val(base))
@@ -239,16 +236,15 @@ public struct SwiftScalarType: Hashable {
     }
         
     public init(scalarType: OfType.__TypeReference) throws {
-        guard scalarType.kind == .scalar, let type = ScalarType.NameType(rawValue: scalarType.name!) else {
+        guard scalarType.kind == .scalar else {
             throw AutoGraphCodeGenError.codeGeneration(message: "Attempting to construct scalar swift type with non-scalar gql type")
         }
+        let type = ScalarType.NameType(rawValue: scalarType.name!)
         self.init(nameType: type)
     }
     
     public init?(namedType: NamedType) {
-        guard let gqlScalar = ScalarType.NameType(rawValue: namedType.name.value) else {
-            return nil
-        }
+        let gqlScalar = ScalarType.NameType(rawValue: namedType.name.value)
         self.init(nameType: gqlScalar)
     }
 }
@@ -301,18 +297,5 @@ extension Value {
 extension ObjectField {
     public var stringified: String {
         return self.name.value + self.value.stringified.uppercaseFirst
-    }
-}
-
-extension ScalarType.NameType {
-    // TODO: Add this into AutoGraphParser lib.
-    public init(builtIn: ScalarType.NameType.BuiltIn) {
-        switch builtIn {
-        case .int:      self = .int
-        case .float:    self = .float
-        case .string:   self = .string
-        case .bool:     self = .bool
-        case .id:       self = .id
-        }
     }
 }

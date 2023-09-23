@@ -16,3 +16,9 @@ If you test from Xcode it will automatically code gen from the various test sche
 
 `swift build -c release --arch arm64 --arch x86_64` will build a release for supported architectures.
 For more information see `https://www.smileykeith.com/2020/12/24/swiftpm-cross-compile/`.
+
+The output binary will be located under `./.build/apple/Products/Release/AutoGraphCodeGen` if building from MacOS.
+
+### Configuration
+
+See example configuration in the Tests under file `test_autograph_codegen_config.json` and additionally look at `./Sources/libAutoGraphCodeGen/Configuration.swift` for configuration data structures and corresponding documentation.
